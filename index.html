@@ -650,8 +650,11 @@
           REGISTRATION SUCCESSFUL
         </span>
         <h3 class="success-title">YOU ARE REGISTERED FOR STRUCTURA'26</h3>
-        <p class="success-email-text">
+        <p class="success-email-text" style="margin-bottom:0.35rem;">
           Confirmation email sent to <strong id="success-email-notice" class="text-orange">your email</strong>
+        </p>
+        <p class="success-spam-note" style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1.5rem;">
+          Please check your Spam/Junk folder if you don't receive the confirmation email.
         </p>
 
         <div class="reg-code-box" id="success-code-display">
@@ -776,66 +779,37 @@
         </div>
       </div>
 
-      <!-- Organizers Showcase — One by One Individual Spotlight -->
-      <div class="organizer-spotlight-container" id="organizer-spotlight">
-        <div class="organizer-tabs-nav" id="organizer-tabs-nav">
-          <button type="button" class="org-tab-btn active" data-org-index="0">Principal</button>
-          <button type="button" class="org-tab-btn" data-org-index="1">HOD</button>
-          <button type="button" class="org-tab-btn" data-org-index="2">Staff Coordinator 1</button>
-          <button type="button" class="org-tab-btn" data-org-index="3">Staff Coordinator 2</button>
+      <!-- Organizers — Clean One-by-One Vertical Sequence -->
+      <div class="organizers-vertical-stack">
+        
+        <!-- Principal -->
+        <div class="organizer-vertical-card">
+          <div class="org-role-lbl">Principal</div>
+          <h3 class="org-name-text">Dr K.VELMURUGAN</h3>
+          <p class="org-sub-desc">Anjalai Ammal Mahalingam Engineering College</p>
         </div>
 
-        <div class="organizer-stage">
-          <!-- Slide 1: Principal -->
-          <div class="organizer-slide-item active" data-org-index="0">
-            <div class="org-spotlight-card">
-              <div class="org-role-lbl">Principal</div>
-              <h3 class="org-name-text" style="font-size:1.6rem;">Dr K.VELMURUGAN</h3>
-              <p class="org-sub-desc" style="font-size:0.95rem;margin-top:0.5rem;">Anjalai Ammal Mahalingam Engineering College</p>
-            </div>
-          </div>
-
-          <!-- Slide 2: HOD -->
-          <div class="organizer-slide-item" data-org-index="1">
-            <div class="org-spotlight-card">
-              <div class="org-role-lbl">HOD</div>
-              <h3 class="org-name-text" style="font-size:1.6rem;">Dr A.SETHUPATHY</h3>
-              <p class="org-sub-desc" style="font-size:0.95rem;margin-top:0.5rem;">Department of Civil Engineering</p>
-            </div>
-          </div>
-
-          <!-- Slide 3: Staff Coordinator 1 -->
-          <div class="organizer-slide-item" data-org-index="2">
-            <div class="org-spotlight-card">
-              <div class="org-role-lbl">Staff Coordinator 1</div>
-              <h3 class="org-name-text" style="font-size:1.6rem;">Dr P. JAYARAJ A/P</h3>
-              <p class="org-sub-desc" style="font-size:0.95rem;margin-top:0.5rem;">Department of Civil Engineering</p>
-            </div>
-          </div>
-
-          <!-- Slide 4: Staff Coordinator 2 -->
-          <div class="organizer-slide-item" data-org-index="3">
-            <div class="org-spotlight-card">
-              <div class="org-role-lbl">Staff Coordinator 2</div>
-              <h3 class="org-name-text" style="font-size:1.6rem;">Mrs. S. P. AKSHAYA A/P</h3>
-              <p class="org-sub-desc" style="font-size:0.95rem;margin-top:0.5rem;">Department of Civil Engineering</p>
-            </div>
-          </div>
+        <!-- HOD -->
+        <div class="organizer-vertical-card">
+          <div class="org-role-lbl">HOD</div>
+          <h3 class="org-name-text">Dr A.SETHUPATHY</h3>
+          <p class="org-sub-desc">Department of Civil Engineering</p>
         </div>
 
-        <!-- Controls Row -->
-        <div class="organizer-controls-row">
-          <button type="button" class="org-arrow-btn" id="org-prev-btn" aria-label="Previous Organizer">&larr; PREV</button>
-          
-          <div class="org-indicators-dots" id="org-dots">
-            <span class="org-dot active" data-org-index="0"></span>
-            <span class="org-dot" data-org-index="1"></span>
-            <span class="org-dot" data-org-index="2"></span>
-            <span class="org-dot" data-org-index="3"></span>
-          </div>
-
-          <button type="button" class="org-arrow-btn" id="org-next-btn" aria-label="Next Organizer">NEXT &rarr;</button>
+        <!-- Staff Coordinator 1 -->
+        <div class="organizer-vertical-card">
+          <div class="org-role-lbl">Staff Coordinator</div>
+          <h3 class="org-name-text">Dr P. JAYARAJ A/P</h3>
+          <p class="org-sub-desc">Department of Civil Engineering</p>
         </div>
+
+        <!-- Staff Coordinator 2 -->
+        <div class="organizer-vertical-card">
+          <div class="org-role-lbl">Staff Coordinator</div>
+          <h3 class="org-name-text">Mrs. S. P. AKSHAYA A/P</h3>
+          <p class="org-sub-desc">Department of Civil Engineering</p>
+        </div>
+
       </div>
 
       <!-- Contact Info — ONE Single Vertical Section -->

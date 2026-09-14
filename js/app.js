@@ -7,7 +7,7 @@
 
 const CONFIG = {
   // Deployed Google Apps Script Web App Endpoint
-  GAS_WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbwtVQEyHUeWj7t--oYSo-178q1_FXt1pbtBGrF8cKj9FHapJVBNW-5VRswAU9OFGXcy/exec',
+  GAS_WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbx1mmdlSF-gvkQ06--A0st5Hvl2gNV30FsaOaTWqXAhS35NDWh2tdIY2W0AhuliqZgy/exec',
   MAX_ACTIVE_REGISTRATIONS: 30,
   HOST_COLLEGE_CODE: '8204',
   SYMPOSIUM_DATE_ISO: '2026-10-10T09:00:00+05:30',
@@ -1261,10 +1261,10 @@ function initRegistrationEngine() {
       return;
     }
 
+    const originalBtnContent = submitBtn.innerHTML;
     submitBtn.disabled = true;
     submitBtn.innerText = 'PROCESSING REGISTRATION...';
 
-    const code = generateCode();
     const now = new Date();
     const regDate = `${String(now.getDate()).padStart(2, '0')}.${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
 
@@ -1327,13 +1327,32 @@ function initRegistrationEngine() {
     if (hasQuest) allEventsList.push('THE STRUCTURA QUEST');
     const eventsString = allEventsList.join(', ');
 
+    // Normalize member object with all standard field aliases for GAS backend compatibility
+    function normalizeMember(m) {
+      if (!m) return null;
+      return {
+        fullName: m.fullName || m.name || '',
+        name: m.fullName || m.name || '',
+        collegeName: m.collegeName || m.college || '',
+        college: m.collegeName || m.college || '',
+        collegeCode: m.collegeCode || m.code || '',
+        code: m.collegeCode || m.code || '',
+        department: m.department || m.dept || '',
+        dept: m.department || m.dept || '',
+        year: m.year || '',
+        email: m.email || '',
+        mobile: m.mobile || m.phone || '',
+        phone: m.mobile || m.phone || ''
+      };
+    }
+
     const payload = {
       action: 'register',
-      registrationCode: code,
       teamName: masterTeamName,
-      member1: mem1,
-      member2: mem2,
-      member3: mem3,
+      member1: normalizeMember(mem1),
+      member2: normalizeMember(mem2),
+      member3: normalizeMember(mem3),
+      technicalEvents: AppState.formData.techEvents,
       techEvents: AppState.formData.techEvents,
       structuraQuestSelected: hasQuest,
       events: eventsString,
@@ -1344,29 +1363,57 @@ function initRegistrationEngine() {
       status: 'ACTIVE'
     };
 
-    // Save record to local mirror
-    saveLocalRecord(payload);
-
-    // Send to Google Apps Script Web App
-    if (CONFIG.GAS_WEB_APP_URL) {
-      try {
-        await fetch(CONFIG.GAS_WEB_APP_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-      } catch (e) {
-        console.warn('Backend API Sync notice:', e);
+    try {
+      if (!CONFIG.GAS_WEB_APP_URL) {
+        alert('Registration Web App URL is not configured.');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnContent;
+        return;
       }
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+      const resp = await fetch(CONFIG.GAS_WEB_APP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload),
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+
+      const res = await resp.json();
+
+      if (res && res.success && res.registrationCode) {
+        const backendCode = res.registrationCode;
+        payload.registrationCode = backendCode;
+
+        // Save backend-verified record to local mirror
+        saveLocalRecord(payload);
+
+        // Transition UI to Success State
+        formContainer.style.display = 'none';
+        successPanel.classList.add('active');
+        document.getElementById('success-code-display').innerText = backendCode;
+        document.getElementById('success-email-notice').innerText = mem1.email;
+
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnContent;
+
+        document.getElementById('registration').scrollIntoView({ behavior: 'smooth' });
+      } else {
+        // Backend returned failure / validation rejection
+        const errorMsg = (res && (res.error || res.message)) ? (res.error || res.message) : 'Registration could not be completed. Please check your details.';
+        alert(errorMsg);
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnContent;
+      }
+    } catch (err) {
+      console.error('Registration submission error:', err);
+      alert('Unable to connect to the registration server. Please check your internet connection and try again.');
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnContent;
     }
-
-    formContainer.style.display = 'none';
-    successPanel.classList.add('active');
-    document.getElementById('success-code-display').innerText = code;
-    document.getElementById('success-email-notice').innerText = mem1.email;
-
-    document.getElementById('registration').scrollIntoView({ behavior: 'smooth' });
   });
 
   function setErr(el, msg) {
@@ -1410,21 +1457,30 @@ function initCheckRegistrationPortal() {
 
     let match = null;
 
-    // First check local mirror
-    const localRecords = getLocalRecords();
-    match = localRecords.find(r => r.registrationCode && r.registrationCode.toUpperCase() === raw);
-
-    // Attempt live fetch if possible
-    if (!match && CONFIG.GAS_WEB_APP_URL) {
+    // 1. Attempt live fetch from Google Apps Script Web App
+    if (CONFIG.GAS_WEB_APP_URL) {
       try {
-        const resp = await fetch(`${CONFIG.GAS_WEB_APP_URL}?action=checkRegistration&registrationCode=${encodeURIComponent(raw)}`);
+        const resp = await fetch(CONFIG.GAS_WEB_APP_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'checkRegistration',
+            registrationCode: raw
+          })
+        });
         const json = await resp.json();
         if (json && json.success && json.registration) {
           match = json.registration;
         }
       } catch (e) {
-        console.warn('Live lookup:', e);
+        console.warn('Live lookup sync:', e);
       }
+    }
+
+    // 2. Fallback to local mirror cache if offline / not found live
+    if (!match) {
+      const localRecords = getLocalRecords();
+      match = localRecords.find(r => r.registrationCode && r.registrationCode.toUpperCase() === raw);
     }
 
     setTimeout(() => {
@@ -1446,32 +1502,45 @@ function initCheckRegistrationPortal() {
         return;
       }
 
-      const m1 = match.member1 || {};
-      const m2 = match.member2 || null;
-      const m3 = match.member3 || null;
+      function parseOrFormatMember(mem, defaultLabel) {
+        if (!mem) return '';
+        if (typeof mem === 'string') {
+          return `<div><strong>${defaultLabel}:</strong> ${esc(mem)}</div>`;
+        }
+        let label = `<strong>${defaultLabel}:</strong> ${esc(mem.fullName || mem.name || 'Delegate')}`;
+        if (mem.mobile || mem.phone) label += ` (+91 ${esc(mem.mobile || mem.phone)})`;
+        if (mem.email) label += ` &bull; ${esc(mem.email)}`;
+        return `<div>${label}</div>`;
+      }
 
-      let membersListHtml = `<div><strong>Member 1 (Lead):</strong> ${esc(m1.fullName)} (+91 ${esc(m1.mobile)} &bull; ${esc(m1.email)})</div>`;
-      if (m2 && m2.fullName) {
-        membersListHtml += `<div style="margin-top:0.35rem;"><strong>Member 2:</strong> ${esc(m2.fullName)} (+91 ${esc(m2.mobile)} &bull; ${esc(m2.email)})</div>`;
+      let membersListHtml = parseOrFormatMember(match.member1, 'Member 1 (Lead)');
+      if (match.member2) {
+        membersListHtml += `<div style="margin-top:0.35rem;">${parseOrFormatMember(match.member2, 'Member 2')}</div>`;
       }
-      if (m3 && m3.fullName) {
-        membersListHtml += `<div style="margin-top:0.35rem;"><strong>Member 3:</strong> ${esc(m3.fullName)} (+91 ${esc(m3.mobile)} &bull; ${esc(m3.email)})</div>`;
+      if (match.member3) {
+        membersListHtml += `<div style="margin-top:0.35rem;">${parseOrFormatMember(match.member3, 'Member 3')}</div>`;
       }
+
+      const m1 = typeof match.member1 === 'object' && match.member1 ? match.member1 : {};
+      const leadName = m1.fullName || m1.name || (typeof match.member1 === 'string' ? match.member1.split('|')[0].replace('Name:', '').trim() : 'Delegate');
+      const leadCollege = m1.collegeName || m1.college || '';
+      const leadDept = m1.department || m1.dept || '';
+      const leadYear = m1.year || '';
 
       resultPane.innerHTML = `
         <div style="background:var(--bg-surface);border:1px solid var(--border-medium);padding:2rem;box-shadow:0 15px 35px rgba(0,0,0,0.4);">
           <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border-subtle);padding-bottom:1rem;margin-bottom:1.5rem;flex-wrap:wrap;gap:0.75rem;">
             <div>
-              <span class="struct-tag orange" style="font-size:0.85rem;">${match.registrationCode}</span>
+              <span class="struct-tag orange" style="font-size:0.85rem;">${esc(match.registrationCode || raw)}</span>
               <span class="struct-tag" style="background:#10B981;color:#FFF;border-color:#10B981;margin-left:0.5rem;">ACTIVE & VERIFIED</span>
-              <h3 style="font-size:1.4rem;font-weight:800;margin-top:0.5rem;">${esc(m1.fullName || 'Delegate')}</h3>
+              <h3 style="font-size:1.4rem;font-weight:800;margin-top:0.5rem;">${esc(leadName)}</h3>
             </div>
           </div>
 
           <table class="manifest-table-dark">
-            <tr><th>College</th><td>${esc(m1.collegeName || '')} (Code: ${esc(m1.collegeCode || '')})</td></tr>
-            <tr><th>Department & Year</th><td>${esc(m1.department || '')} &bull; ${esc(m1.year || '')} Year</td></tr>
-            <tr><th>Selected Events</th><td><span class="struct-tag orange">${esc(match.events || (match.techEvents ? match.techEvents.join(', ') : ''))}</span></td></tr>
+            ${leadCollege ? `<tr><th>College</th><td>${esc(leadCollege)}</td></tr>` : ''}
+            ${leadDept || leadYear ? `<tr><th>Department & Year</th><td>${esc(leadDept)} ${leadYear ? `&bull; ${esc(leadYear)} Year` : ''}</td></tr>` : ''}
+            <tr><th>Selected Events</th><td><span class="struct-tag orange">${esc(match.events || (match.technicalEvents ? match.technicalEvents.join(', ') : (match.techEvents ? match.techEvents.join(', ') : '')))}</span></td></tr>
             ${match.teamName ? `<tr><th>Team Name</th><td><strong>${esc(match.teamName)}</strong></td></tr>` : ''}
             ${match.pptTopic ? `<tr><th>PPT Topic</th><td><em>${esc(match.pptTopic)}</em></td></tr>` : ''}
             <tr><th>Participants</th><td>${membersListHtml}</td></tr>
@@ -1502,7 +1571,7 @@ function initOrganizerSpotlight() {
   const container = document.getElementById('organizer-spotlight');
   if (!container) return;
 
-  const tabs = container.querySelectorAll('.org-tab-btn');
+  const steps = container.querySelectorAll('.org-seq-step, .org-tab-btn');
   const slides = container.querySelectorAll('.organizer-slide-item');
   const dots = container.querySelectorAll('.org-dot');
   const prevBtn = document.getElementById('org-prev-btn');
@@ -1519,8 +1588,8 @@ function initOrganizerSpotlight() {
       slide.classList.toggle('active', i === currentIdx);
     });
 
-    tabs.forEach((tab, i) => {
-      tab.classList.toggle('active', i === currentIdx);
+    steps.forEach((step, i) => {
+      step.classList.toggle('active', i === currentIdx);
     });
 
     dots.forEach((dot, i) => {
@@ -1528,9 +1597,9 @@ function initOrganizerSpotlight() {
     });
   }
 
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      const idx = parseInt(tab.getAttribute('data-org-index'), 10);
+  steps.forEach(step => {
+    step.addEventListener('click', () => {
+      const idx = parseInt(step.getAttribute('data-org-index'), 10);
       showSlide(idx);
       resetAutoTimer();
     });

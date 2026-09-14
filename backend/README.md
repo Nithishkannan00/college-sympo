@@ -28,7 +28,7 @@ This backend runs completely on Google Apps Script (serverless, zero cost) conne
 2. Replace `CONFIG.GAS_WEB_APP_URL` with your copied Web App URL:
    ```javascript
    const CONFIG = {
-     GAS_WEB_APP_URL: 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec',
+     GAS_WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbx1mmdlSF-gvkQ06--A0st5Hvl2gNV30FsaOaTWqXAhS35NDWh2tdIY2W0AhuliqZgy/exec',
      ...
    };
    ```
