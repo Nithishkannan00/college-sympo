@@ -57,7 +57,7 @@
         </div>
       </a>
 
-      <!-- Desktop Navigation: Home || Events || General Rules || Registration Now || Check Registration || Location || Contact Us -->
+      <!-- Desktop Navigation: Home || Events || General Rules || Registration Now || Check Registration || Location || Contact Info -->
       <nav class="nav-menu-desktop">
         <a href="#home" class="nav-link active">Home</a>
         <a href="#events" class="nav-link">Events</a>
@@ -65,7 +65,7 @@
         <a href="#registration" class="nav-link cta-link">Registration Now</a>
         <a href="#check-registration" class="nav-link">Check Registration</a>
         <a href="#location" class="nav-link">Location</a>
-        <a href="#contact" class="nav-link">Contact Us</a>
+        <a href="#contact" class="nav-link">Contact Info</a>
       </nav>
 
       <!-- Mobile Hamburger Button -->
@@ -96,7 +96,7 @@
       <a href="#registration" class="nav-link text-orange">Registration Now</a>
       <a href="#check-registration" class="nav-link">Check Registration</a>
       <a href="#location" class="nav-link">Location</a>
-      <a href="#contact" class="nav-link">Contact Us</a>
+      <a href="#contact" class="nav-link">Contact Info</a>
     </div>
   </div>
 
@@ -181,13 +181,16 @@
   </section>
 
   <!-- ===============================================================
-       DEPARTMENT IDENTITY SECTION (NO CIVIL DEPT LOGO)
+       DEPARTMENT IDENTIFICATION (OFFICIAL CIVIL DEPT LOGO INCLUDED)
        =============================================================== -->
   <section class="dept-identity-section">
     <div class="container">
       <div class="dept-identity-card">
+        <div class="dept-logo-side">
+          <img src="assets/logos/civil_dept_official_logo.png" alt="Official Civil Engineering Department Logo" class="official-dept-logo-img">
+        </div>
         <div class="dept-info-side">
-          <span class="struct-tag orange" style="margin-bottom:0.75rem;">DEPARTMENT IDENTITY</span>
+          <span class="struct-tag orange" style="margin-bottom:0.75rem;">DEPARTMENT IDENTIFICATION</span>
           <h2 class="dept-title-text">DEPARTMENT OF CIVIL ENGINEERING</h2>
           <p class="dept-desc-text">
             Fostering structural excellence, sustainable materials research, advanced computer-aided design, and visionary infrastructure engineering for national development.
@@ -369,8 +372,6 @@
           </button>
           <div class="rule-set-body">
             <ul class="rules-bullet-list">
-              <li>Only participants from other recognized engineering colleges are eligible.</li>
-              <li>Students from host college (Anjalai Ammal Mahalingam Engineering College, Code 8204) are not eligible to register.</li>
               <li>Minimum 1 technical event must be selected.</li>
               <li>Maximum 2 technical events can be selected.</li>
               <li>The Structura Quest can be selected only if at least one technical event is selected.</li>
@@ -775,90 +776,115 @@
         </div>
       </div>
 
-      <div class="org-cards-row">
-        <!-- Principal -->
-        <div class="org-info-card">
-          <div class="org-role-lbl">Principal</div>
-          <h3 class="org-name-text">Dr K.VELMURUGAN</h3>
-          <p class="org-sub-desc">Anjalai Ammal Mahalingam Engineering College</p>
+      <!-- Organizers Showcase — One by One Individual Spotlight -->
+      <div class="organizer-spotlight-container" id="organizer-spotlight">
+        <div class="organizer-tabs-nav" id="organizer-tabs-nav">
+          <button type="button" class="org-tab-btn active" data-org-index="0">Principal</button>
+          <button type="button" class="org-tab-btn" data-org-index="1">HOD</button>
+          <button type="button" class="org-tab-btn" data-org-index="2">Staff Coordinator 1</button>
+          <button type="button" class="org-tab-btn" data-org-index="3">Staff Coordinator 2</button>
         </div>
 
-        <!-- HOD -->
-        <div class="org-info-card">
-          <div class="org-role-lbl">HOD</div>
-          <h3 class="org-name-text">Dr A.SETHUPATHY</h3>
-          <p class="org-sub-desc">Department of Civil Engineering</p>
+        <div class="organizer-stage">
+          <!-- Slide 1: Principal -->
+          <div class="organizer-slide-item active" data-org-index="0">
+            <div class="org-spotlight-card">
+              <div class="org-role-lbl">Principal</div>
+              <h3 class="org-name-text" style="font-size:1.6rem;">Dr K.VELMURUGAN</h3>
+              <p class="org-sub-desc" style="font-size:0.95rem;margin-top:0.5rem;">Anjalai Ammal Mahalingam Engineering College</p>
+            </div>
+          </div>
+
+          <!-- Slide 2: HOD -->
+          <div class="organizer-slide-item" data-org-index="1">
+            <div class="org-spotlight-card">
+              <div class="org-role-lbl">HOD</div>
+              <h3 class="org-name-text" style="font-size:1.6rem;">Dr A.SETHUPATHY</h3>
+              <p class="org-sub-desc" style="font-size:0.95rem;margin-top:0.5rem;">Department of Civil Engineering</p>
+            </div>
+          </div>
+
+          <!-- Slide 3: Staff Coordinator 1 -->
+          <div class="organizer-slide-item" data-org-index="2">
+            <div class="org-spotlight-card">
+              <div class="org-role-lbl">Staff Coordinator 1</div>
+              <h3 class="org-name-text" style="font-size:1.6rem;">Dr P. JAYARAJ A/P</h3>
+              <p class="org-sub-desc" style="font-size:0.95rem;margin-top:0.5rem;">Department of Civil Engineering</p>
+            </div>
+          </div>
+
+          <!-- Slide 4: Staff Coordinator 2 -->
+          <div class="organizer-slide-item" data-org-index="3">
+            <div class="org-spotlight-card">
+              <div class="org-role-lbl">Staff Coordinator 2</div>
+              <h3 class="org-name-text" style="font-size:1.6rem;">Mrs. S. P. AKSHAYA A/P</h3>
+              <p class="org-sub-desc" style="font-size:0.95rem;margin-top:0.5rem;">Department of Civil Engineering</p>
+            </div>
+          </div>
         </div>
 
-        <!-- Staff Coordinator 1 (Change 6) -->
-        <div class="org-info-card">
-          <div class="org-role-lbl">Staff Coordinator 1</div>
-          <h3 class="org-name-text">Dr P. JAYARAJ A/P</h3>
-          <p class="org-sub-desc">Department of Civil Engineering</p>
-        </div>
+        <!-- Controls Row -->
+        <div class="organizer-controls-row">
+          <button type="button" class="org-arrow-btn" id="org-prev-btn" aria-label="Previous Organizer">&larr; PREV</button>
+          
+          <div class="org-indicators-dots" id="org-dots">
+            <span class="org-dot active" data-org-index="0"></span>
+            <span class="org-dot" data-org-index="1"></span>
+            <span class="org-dot" data-org-index="2"></span>
+            <span class="org-dot" data-org-index="3"></span>
+          </div>
 
-        <!-- Staff Coordinator 2 (Change 6) -->
-        <div class="org-info-card">
-          <div class="org-role-lbl">Staff Coordinator 2</div>
-          <h3 class="org-name-text">Mrs. S. P. AKSHAYA A/P</h3>
-          <p class="org-sub-desc">Department of Civil Engineering</p>
+          <button type="button" class="org-arrow-btn" id="org-next-btn" aria-label="Next Organizer">NEXT &rarr;</button>
         </div>
       </div>
 
-      <!-- Student Coordinators & Technical Queries -->
+      <!-- Contact Info — ONE Single Vertical Section -->
       <div class="section-hdr" style="margin-top:3.5rem;">
         <div>
           <span class="struct-tag orange" style="margin-bottom:0.5rem;">COMMUNICATION DESK</span>
-          <h2 style="font-size: clamp(2rem, 4vw, 2.8rem);">CONTACT US</h2>
+          <h2 style="font-size: clamp(2rem, 4vw, 2.8rem);">CONTACT INFO</h2>
         </div>
       </div>
 
-      <div class="org-cards-row">
-        <!-- Student Coordinator 1 -->
-        <div class="org-info-card" style="border-left:4px solid var(--accent-orange);">
-          <div class="org-role-lbl">Student Coordinator</div>
-          <div class="org-contact-subcat">General Inquiries & Registration</div>
-          <h3 class="org-name-text">Vijay Prasanna M</h3>
-          <a href="tel:9025680773" class="contact-phone-link">
-            📞 9025680773
-          </a>
+      <div class="contact-info-vertical-stack">
+        <!-- General Inquiries & Registration -->
+        <div class="contact-card-vertical">
+          <div class="contact-category-lbl">General Inquiries & Registration</div>
+          
+          <div class="contact-person-entry">
+            <div class="contact-person-name">Vijay Prasanna M</div>
+            <a href="tel:9025680773" class="contact-phone-link">📞 9025680773</a>
+          </div>
+
+          <div class="contact-person-entry" style="margin-top:1.25rem;">
+            <div class="contact-person-name">Kirsha A</div>
+            <a href="tel:6382049984" class="contact-phone-link">📞 6382049984</a>
+          </div>
         </div>
 
-        <!-- Student Coordinator 2 -->
-        <div class="org-info-card" style="border-left:4px solid var(--accent-orange);">
-          <div class="org-role-lbl">Student Coordinator</div>
-          <div class="org-contact-subcat">General Inquiries & Registration</div>
-          <h3 class="org-name-text">Kirsha A</h3>
-          <a href="tel:6382049984" class="contact-phone-link">
-            📞 6382049984
-          </a>
+        <!-- Technical Queries -->
+        <div class="contact-card-vertical">
+          <div class="contact-category-lbl">Technical Queries</div>
+          <div class="contact-person-entry">
+            <div class="contact-person-name">NITHISHKANNAN K</div>
+            <a href="tel:7604846082" class="contact-phone-link">📞 7604846082</a>
+          </div>
         </div>
 
-        <!-- Technical Queries: Phone Number in ORANGE (Change 7) -->
-        <div class="org-info-card" style="border-left:4px solid var(--accent-orange);">
-          <div class="org-role-lbl text-orange">Technical Queries</div>
-          <h3 class="org-name-text">NITHISHKANNAN K</h3>
-          <a href="tel:7604846082" class="contact-phone-orange">
-            📞 7604846082
-          </a>
+        <!-- Official Email -->
+        <div class="contact-card-vertical">
+          <div class="contact-category-lbl">Official Email</div>
+          <div class="contact-plain-value">
+            <a href="mailto:structuraaamec@gmail.com" class="contact-val-text">structuraaamec@gmail.com</a>
+          </div>
         </div>
 
-        <!-- Official Email (Change 8) -->
-        <div class="org-info-card" style="border-left:4px solid var(--border-strong);">
-          <div class="org-role-lbl">Official Email</div>
-          <h3 class="org-name-text" style="font-size:1rem;word-break:break-all;">structuraaamec@gmail.com</h3>
-          <a href="mailto:structuraaamec@gmail.com" class="contact-phone-link" style="color:var(--accent-orange);margin-top:0.4rem;">
-            ✉️ Send Mail
-          </a>
-        </div>
-
-        <!-- Official Instagram (Change 8) -->
-        <div class="org-info-card" style="border-left:4px solid var(--border-strong);">
-          <div class="org-role-lbl">Official Instagram</div>
-          <h3 class="org-name-text">@structura_2k26</h3>
-          <a href="https://instagram.com/structura_2k26" target="_blank" rel="noopener noreferrer" class="contact-phone-link" style="color:var(--accent-orange);margin-top:0.4rem;">
-            📸 Follow on Instagram
-          </a>
+        <!-- Official Instagram -->
+        <div class="contact-card-vertical">
+          <div class="contact-category-lbl">Official Instagram</div>
+          <div class="contact-plain-value">
+            <a href="https://instagram.com/structura_2k26" target="_blank" rel="noopener noreferrer" class="contact-val-text">@structura_2k26</a>
+          </div>
         </div>
       </div>
 

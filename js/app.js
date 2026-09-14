@@ -202,7 +202,7 @@ function generateCode() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  initCadCanvas('entry-cad-bg');
+  initEntryScreenCad('entry-cad-bg');
   initCadCanvas('site-cad-bg');
   initEntryScreen();
   initHeaderNavigation();
@@ -211,18 +211,21 @@ document.addEventListener('DOMContentLoaded', () => {
   initGeneralRulesAccordion();
   initRegistrationEngine();
   initCheckRegistrationPortal();
+  initOrganizerSpotlight();
 });
 
 /* ===============================================================
-   1. Subtle Animated Engineering CAD & Blueprint Background (Change 1)
+   1A. HIGH-IMPACT ENTRY SCREEN 3D ARCHITECTURAL / STRUCTURAL CAD
+       Multi-Tier High-Rise Structural Wireframe & Blueprint Matrix
    =============================================================== */
-function initCadCanvas(canvasId) {
+function initEntryScreenCad(canvasId) {
   const canvas = document.getElementById(canvasId);
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
+  
   let width, height;
-  let offset = 0;
-  let angle = 0;
+  let time = 0;
+  let rotY = 0.35, rotX = 0.22, rotZ = 0.05;
 
   function resize() {
     width = canvas.width = window.innerWidth;
@@ -233,82 +236,415 @@ function initCadCanvas(canvasId) {
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // Multi-tier 3D Structural High-Rise Tower & Cantilever Geometry
+  const buildingNodes = [];
+  const buildingEdges = [];
+
+  const stories = 7;
+  const storyHeight = 55;
+  const baseWidth = 180;
+  const baseDepth = 180;
+
+  // 1. Skyscraper Floor Tiers
+  for (let s = 0; s <= stories; s++) {
+    const y = (stories / 2 - s) * storyHeight;
+    // Taper slightly towards top
+    const taper = 1.0 - (s / (stories + 2)) * 0.45;
+    const w = (baseWidth * taper) / 2;
+    const d = (baseDepth * taper) / 2;
+
+    const baseIdx = buildingNodes.length;
+
+    // 4 Corner Column Nodes
+    buildingNodes.push({ ox: -w, oy: y, oz: -d }); // 0: Top-Left
+    buildingNodes.push({ ox:  w, oy: y, oz: -d }); // 1: Top-Right
+    buildingNodes.push({ ox:  w, oy: y, oz:  d }); // 2: Bottom-Right
+    buildingNodes.push({ ox: -w, oy: y, oz:  d }); // 3: Bottom-Left
+
+    // Floor Perimeter Beams
+    buildingEdges.push([baseIdx + 0, baseIdx + 1, 'beam']);
+    buildingEdges.push([baseIdx + 1, baseIdx + 2, 'beam']);
+    buildingEdges.push([baseIdx + 2, baseIdx + 3, 'beam']);
+    buildingEdges.push([baseIdx + 3, baseIdx + 0, 'beam']);
+
+    // Interior Cross Girders
+    buildingEdges.push([baseIdx + 0, baseIdx + 2, 'interior']);
+    buildingEdges.push([baseIdx + 1, baseIdx + 3, 'interior']);
+
+    // Vertical Columns & X-Bracing connecting to previous story
+    if (s > 0) {
+      const prevIdx = baseIdx - 4;
+      for (let c = 0; c < 4; c++) {
+        const nextC = (c + 1) % 4;
+        // Vertical Column
+        buildingEdges.push([prevIdx + c, baseIdx + c, 'column']);
+        // Diagonal X-Braces on Facade
+        buildingEdges.push([prevIdx + c, baseIdx + nextC, 'brace']);
+        buildingEdges.push([prevIdx + nextC, baseIdx + c, 'brace']);
+      }
+    }
+  }
+
+  // 2. Crown Architectural Spire on Top of Tower
+  const topCenterIdx = buildingNodes.length;
+  const topY = (stories / 2 - stories) * storyHeight - 90;
+  buildingNodes.push({ ox: 0, oy: topY, oz: 0 });
+
+  const lastStoryBase = (stories) * 4;
+  for (let c = 0; c < 4; c++) {
+    buildingEdges.push([lastStoryBase + c, topCenterIdx, 'spire']);
+  }
+
+  // 3. Floating Engineering Dimension Annotation Lines
+  const dimensionMarkers = [
+    { xRatio: 0.15, yRatio: 0.25, len: 140, label: 'ELEV: +145.00m' },
+    { xRatio: 0.82, yRatio: 0.65, len: 160, label: 'GRID-AXIS: C-04' },
+    { xRatio: 0.22, yRatio: 0.78, len: 120, label: 'SPAN: 42.50m' }
+  ];
+
+  // 4. Floating Ambient Technical CAD Particles
+  const particles = [];
+  const particleCount = 28;
+  for (let i = 0; i < particleCount; i++) {
+    particles.push({
+      x: Math.random() * 1200,
+      y: Math.random() * 800,
+      vx: (Math.random() - 0.5) * 0.35,
+      vy: -0.2 - Math.random() * 0.4,
+      size: 1 + Math.random() * 2,
+      alpha: 0.2 + Math.random() * 0.5
+    });
+  }
+
   function render() {
     ctx.clearRect(0, 0, width, height);
-    
-    // Engineering Blueprint Grid
-    const gridSize = 70;
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.022)';
-    ctx.lineWidth = 1;
 
-    const startX = (offset % gridSize);
-    for (let x = startX; x < width; x += gridSize) {
-      ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, height);
-      ctx.stroke();
-    }
-
-    const startY = (offset % gridSize);
-    for (let y = startY; y < height; y += gridSize) {
-      ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(width, y);
-      ctx.stroke();
-    }
-
-    // CAD Coordinate Crosshairs & Node Junctions
-    ctx.fillStyle = 'rgba(255, 85, 0, 0.07)';
-    for (let x = startX; x < width; x += gridSize * 3) {
-      for (let y = startY; y < height; y += gridSize * 3) {
-        ctx.fillRect(x - 2, y - 2, 4, 4);
-      }
-    }
-
-    // Subtle 3D Space Truss Wireframe Overlay
-    const centerX = width * 0.78;
-    const centerY = height * 0.45;
-    const trussRadius = Math.min(width, height) * 0.18;
-
-    if (trussRadius > 40) {
-      ctx.save();
-      ctx.translate(centerX, centerY);
-      
-      const numNodes = 6;
-      const pts = [];
-      for (let i = 0; i < numNodes; i++) {
-        const a = angle + (i * Math.PI * 2 / numNodes);
-        const px = Math.cos(a) * trussRadius;
-        const py = Math.sin(a * 1.5) * (trussRadius * 0.55);
-        pts.push({ x: px, y: py });
-      }
-
-      ctx.strokeStyle = 'rgba(255, 85, 0, 0.05)';
-      ctx.lineWidth = 1;
-      for (let i = 0; i < pts.length; i++) {
-        for (let j = i + 1; j < pts.length; j++) {
-          ctx.beginPath();
-          ctx.moveTo(pts[i].x, pts[i].y);
-          ctx.lineTo(pts[j].x, pts[j].y);
-          ctx.stroke();
-        }
-      }
-
-      // Small Orange Nodes
-      ctx.fillStyle = 'rgba(255, 85, 0, 0.12)';
-      pts.forEach(p => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      ctx.restore();
-    }
+    time += 0.015;
 
     if (!prefersReducedMotion) {
-      offset += 0.15;
-      angle += 0.0015;
+      rotY += 0.0035;
+      rotX = 0.22 + Math.sin(time * 0.4) * 0.06;
+      rotZ = Math.sin(time * 0.25) * 0.03;
     }
+
+    // A. Background Blueprint Coordinate Grid
+    const gridSize = 55;
+    const gridOffset = (time * 5) % gridSize;
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.035)';
+    ctx.lineWidth = 1;
+
+    for (let x = gridOffset; x < width; x += gridSize) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0); ctx.lineTo(x, height);
+      ctx.stroke();
+    }
+    for (let y = gridOffset; y < height; y += gridSize) {
+      ctx.beginPath();
+      ctx.moveTo(0, y); ctx.lineTo(width, y);
+      ctx.stroke();
+    }
+
+    // Grid Intersections Crosshairs
+    ctx.fillStyle = 'rgba(255, 85, 0, 0.25)';
+    for (let x = gridOffset; x < width; x += gridSize * 3) {
+      for (let y = gridOffset; y < height; y += gridSize * 3) {
+        ctx.fillRect(x - 3, y - 0.5, 7, 1);
+        ctx.fillRect(x - 0.5, y - 3, 1, 7);
+      }
+    }
+
+    // B. Receding Isometric Perspective Floor Grid (Civil Ground Datum Plane)
+    ctx.strokeStyle = 'rgba(0, 163, 255, 0.05)';
+    const groundY = height * 0.78;
+    for (let i = -12; i <= 12; i++) {
+      ctx.beginPath();
+      ctx.moveTo(width * 0.5 + i * 25, groundY - 120);
+      ctx.lineTo(width * 0.5 + i * 110, height);
+      ctx.stroke();
+    }
+
+    // C. Technical Dimensions & Construction Markers
+    dimensionMarkers.forEach(dm => {
+      const px = width * dm.xRatio;
+      const py = height * dm.yRatio;
+      ctx.strokeStyle = 'rgba(0, 163, 255, 0.18)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(px, py); ctx.lineTo(px + dm.len, py);
+      ctx.stroke();
+
+      // Tick markers
+      ctx.beginPath();
+      ctx.moveTo(px, py - 4); ctx.lineTo(px, py + 4);
+      ctx.moveTo(px + dm.len, py - 4); ctx.lineTo(px + dm.len, py + 4);
+      ctx.stroke();
+
+      ctx.font = '9px "JetBrains Mono", monospace';
+      ctx.fillStyle = 'rgba(0, 163, 255, 0.28)';
+      ctx.fillText(dm.label, px + 8, py - 6);
+    });
+
+    // D. 3D Skyscraper Wireframe Projection & Rendering
+    const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+    const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+    const cosZ = Math.cos(rotZ), sinZ = Math.sin(rotZ);
+
+    const fov = 520;
+    const centerX = width * 0.5;
+    const centerY = height * 0.48;
+
+    const projected = buildingNodes.map(n => {
+      // Y Rotation
+      let x1 = n.ox * cosY - n.oz * sinY;
+      let z1 = n.ox * sinY + n.oz * cosY;
+      // X Rotation
+      let y1 = n.oy * cosX - z1 * sinX;
+      let z2 = n.oy * sinX + z1 * cosX;
+      // Z Rotation
+      let x2 = x1 * cosZ - y1 * sinZ;
+      let y2 = x1 * sinZ + y1 * cosZ;
+      let z3 = z2 + 620;
+
+      const scale = fov / z3;
+      return {
+        px: centerX + x2 * scale,
+        py: centerY + y2 * scale,
+        scale: scale,
+        z: z3
+      };
+    });
+
+    // Draw Wireframe Edges
+    buildingEdges.forEach(([i, j, type]) => {
+      const p1 = projected[i];
+      const p2 = projected[j];
+
+      if (type === 'column' || type === 'spire') {
+        ctx.strokeStyle = 'rgba(0, 163, 255, 0.42)';
+        ctx.lineWidth = 1.6;
+      } else if (type === 'brace') {
+        ctx.strokeStyle = 'rgba(255, 85, 0, 0.38)';
+        ctx.lineWidth = 1.1;
+      } else if (type === 'beam') {
+        ctx.strokeStyle = 'rgba(0, 163, 255, 0.32)';
+        ctx.lineWidth = 1.3;
+      } else {
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+        ctx.lineWidth = 0.8;
+      }
+
+      ctx.beginPath();
+      ctx.moveTo(p1.px, p1.py);
+      ctx.lineTo(p2.px, p2.py);
+      ctx.stroke();
+    });
+
+    // Draw Joint Connection Rivets & Nodes
+    projected.forEach(p => {
+      ctx.fillStyle = '#FF5500';
+      ctx.beginPath();
+      ctx.arc(p.px, p.py, Math.max(1.8, p.scale * 3.2), 0, Math.PI * 2);
+      ctx.fill();
+
+      // Ambient Node Glow
+      ctx.fillStyle = 'rgba(255, 85, 0, 0.22)';
+      ctx.beginPath();
+      ctx.arc(p.px, p.py, Math.max(3.5, p.scale * 6.5), 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // E. Floating Ambient Technical Particles
+    particles.forEach(pt => {
+      pt.x += pt.vx;
+      pt.y += pt.vy;
+      if (pt.y < -20) pt.y = height + 20;
+      if (pt.x < -20) pt.x = width + 20;
+      if (pt.x > width + 20) pt.x = -20;
+
+      ctx.fillStyle = `rgba(255, 85, 0, ${pt.alpha * 0.4})`;
+      ctx.beginPath();
+      ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // F. Horizontal Blueprint Laser Sweep
+    const laserY = (time * 50) % height;
+    const laserGrad = ctx.createLinearGradient(0, laserY, width, laserY);
+    laserGrad.addColorStop(0, 'rgba(0, 163, 255, 0)');
+    laserGrad.addColorStop(0.5, 'rgba(0, 163, 255, 0.12)');
+    laserGrad.addColorStop(1, 'rgba(0, 163, 255, 0)');
+    ctx.fillStyle = laserGrad;
+    ctx.fillRect(0, laserY - 1, width, 2);
+
+    requestAnimationFrame(render);
+  }
+  render();
+}
+
+/* ===============================================================
+   1B. MAIN WEBSITE BACKGROUND CAD BLUEPRINT ENGINE
+   =============================================================== */
+function initCadCanvas(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  
+  let width, height;
+  let scrollY = 0;
+  let rotX = 0.25, rotY = 0.4, rotZ = 0.1;
+  let time = 0;
+
+  function resize() {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize, { passive: true });
+
+  window.addEventListener('scroll', () => {
+    scrollY = window.pageYOffset || document.documentElement.scrollTop;
+  }, { passive: true });
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // 3D Space Truss Structural Geometry Nodes (Warren Girder)
+  const nodes = [];
+  const edges = [];
+  const cols = 5;
+  const rows = 3;
+  const depthLayers = 2;
+  const dx = 140, dy = 90, dz = 120;
+
+  for (let z = 0; z < depthLayers; z++) {
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        const px = (x - cols / 2 + 0.5) * dx;
+        const py = (y - rows / 2 + 0.5) * dy;
+        const pz = (z - depthLayers / 2 + 0.5) * dz;
+        nodes.push({ x: px, y: py, z: pz, ox: px, oy: py, oz: pz });
+      }
+    }
+  }
+
+  const getIdx = (x, y, z) => z * (rows * cols) + y * cols + x;
+
+  for (let z = 0; z < depthLayers; z++) {
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        const c = getIdx(x, y, z);
+        if (x < cols - 1) edges.push([c, getIdx(x + 1, y, z), 'chord']);
+        if (y < rows - 1) edges.push([c, getIdx(x, y + 1, z), 'vertical']);
+        if (x < cols - 1 && y < rows - 1) {
+          edges.push([c, getIdx(x + 1, y + 1, z), 'diagonal']);
+          edges.push([getIdx(x + 1, y, z), getIdx(x, y + 1, z), 'diagonal']);
+        }
+        if (z < depthLayers - 1) {
+          edges.push([c, getIdx(x, y, z + 1), 'cross']);
+          if (x < cols - 1) edges.push([c, getIdx(x + 1, y, z + 1), 'cross']);
+        }
+      }
+    }
+  }
+
+  function render() {
+    ctx.clearRect(0, 0, width, height);
+
+    time += 0.012;
+    const currentScrollOffset = scrollY * 0.0006;
+    
+    if (!prefersReducedMotion) {
+      rotY += 0.002;
+      rotX = 0.2 + Math.sin(time * 0.3) * 0.08 + currentScrollOffset;
+      rotZ = Math.cos(time * 0.2) * 0.05;
+    }
+
+    // 1. Engineering Blueprint Grid
+    const gridSize = 65;
+    const gridOffset = (time * 6) % gridSize;
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+    ctx.lineWidth = 1;
+
+    for (let x = gridOffset; x < width; x += gridSize) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0); ctx.lineTo(x, height);
+      ctx.stroke();
+    }
+    for (let y = gridOffset; y < height; y += gridSize) {
+      ctx.beginPath();
+      ctx.moveTo(0, y); ctx.lineTo(width, y);
+      ctx.stroke();
+    }
+
+    // 2. Blueprint Intersection Crosshairs
+    ctx.fillStyle = 'rgba(255, 85, 0, 0.18)';
+    for (let x = gridOffset; x < width; x += gridSize * 3) {
+      for (let y = gridOffset; y < height; y += gridSize * 3) {
+        ctx.fillRect(x - 3, y - 0.5, 7, 1);
+        ctx.fillRect(x - 0.5, y - 3, 1, 7);
+      }
+    }
+
+    // 3. Real-time 3D Structural CAD Model
+    const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+    const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+    const cosZ = Math.cos(rotZ), sinZ = Math.sin(rotZ);
+
+    const fov = 480;
+    const centerX = width > 900 ? width * 0.72 : width * 0.5;
+    const centerY = height * 0.42;
+
+    const projected = nodes.map(n => {
+      let x1 = n.ox * cosY - n.oz * sinY;
+      let z1 = n.ox * sinY + n.oz * cosY;
+      let y1 = n.oy * cosX - z1 * sinX;
+      let z2 = n.oy * sinX + z1 * cosX;
+      let x2 = x1 * cosZ - y1 * sinZ;
+      let y2 = x1 * sinZ + y1 * cosZ;
+      let z3 = z2 + 650;
+
+      const scale = fov / z3;
+      return {
+        px: centerX + x2 * scale,
+        py: centerY + y2 * scale,
+        scale: scale,
+        z: z3
+      };
+    });
+
+    // Draw Structural Members (Edges)
+    edges.forEach(([i, j, type]) => {
+      const p1 = projected[i];
+      const p2 = projected[j];
+
+      if (type === 'chord') {
+        ctx.strokeStyle = 'rgba(0, 163, 255, 0.22)';
+        ctx.lineWidth = 1.6;
+      } else if (type === 'diagonal') {
+        ctx.strokeStyle = 'rgba(255, 85, 0, 0.25)';
+        ctx.lineWidth = 1.2;
+      } else {
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+        ctx.lineWidth = 0.9;
+      }
+
+      ctx.beginPath();
+      ctx.moveTo(p1.px, p1.py);
+      ctx.lineTo(p2.px, p2.py);
+      ctx.stroke();
+    });
+
+    // Draw Structural Joint Nodes
+    projected.forEach(p => {
+      ctx.fillStyle = '#FF5500';
+      ctx.beginPath();
+      ctx.arc(p.px, p.py, Math.max(1.5, p.scale * 2.8), 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = 'rgba(255, 85, 0, 0.2)';
+      ctx.beginPath();
+      ctx.arc(p.px, p.py, Math.max(3, p.scale * 5.5), 0, Math.PI * 2);
+      ctx.fill();
+    });
 
     requestAnimationFrame(render);
   }
@@ -1157,4 +1493,82 @@ function esc(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
+}
+
+/* ===============================================================
+   9. Organizers One-by-One Spotlight Controller
+   =============================================================== */
+function initOrganizerSpotlight() {
+  const container = document.getElementById('organizer-spotlight');
+  if (!container) return;
+
+  const tabs = container.querySelectorAll('.org-tab-btn');
+  const slides = container.querySelectorAll('.organizer-slide-item');
+  const dots = container.querySelectorAll('.org-dot');
+  const prevBtn = document.getElementById('org-prev-btn');
+  const nextBtn = document.getElementById('org-next-btn');
+
+  let currentIdx = 0;
+  const total = slides.length;
+  let autoTimer = null;
+
+  function showSlide(idx) {
+    currentIdx = (idx + total) % total;
+    
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === currentIdx);
+    });
+
+    tabs.forEach((tab, i) => {
+      tab.classList.toggle('active', i === currentIdx);
+    });
+
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === currentIdx);
+    });
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const idx = parseInt(tab.getAttribute('data-org-index'), 10);
+      showSlide(idx);
+      resetAutoTimer();
+    });
+  });
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const idx = parseInt(dot.getAttribute('data-org-index'), 10);
+      showSlide(idx);
+      resetAutoTimer();
+    });
+  });
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      showSlide(currentIdx - 1);
+      resetAutoTimer();
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      showSlide(currentIdx + 1);
+      resetAutoTimer();
+    });
+  }
+
+  function resetAutoTimer() {
+    if (autoTimer) clearInterval(autoTimer);
+    autoTimer = setInterval(() => {
+      showSlide(currentIdx + 1);
+    }, 4500);
+  }
+
+  container.addEventListener('mouseenter', () => {
+    if (autoTimer) clearInterval(autoTimer);
+  });
+  container.addEventListener('mouseleave', resetAutoTimer);
+
+  resetAutoTimer();
 }
