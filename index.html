@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STRUCTURA'26 | National Level Technical Symposium | Department of Civil Engineering | AAMEC</title>
+  
+  <!-- SEO Metadata -->
+  <meta name="description" content="STRUCTURA'26 — National Level Technical Symposium organized by the Department of Civil Engineering, Anjalai Ammal Mahalingam Engineering College, Kovilvenni on 10.10.2026.">
+  <meta name="keywords" content="STRUCTURA 2026, Civil Engineering Symposium, AAMEC, Paper Presentation, AutoCAD, Code Cracking, The Structura Quest, Kovilvenni">
+  <meta name="author" content="Department of Civil Engineering, AAMEC">
+  
+  <!-- Google Fonts: Syne, Space Grotesk, JetBrains Mono, Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700;800&family=Space+Grotesk:wght@600;700;800;900&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+  <!-- ===============================================================
+       02. ENTRY EXPERIENCE (SMOOTH CINEMATIC REVEAL)
+       =============================================================== -->
+  <div class="entry-modal-layer" id="entry-layer">
+    <canvas id="entry-cad-bg" class="entry-cad-canvas"></canvas>
+    <div class="entry-cinematic-card">
+      <div class="entry-hierarchy-block">
+        <h1 class="entry-sympo-title">BUILD STRUCTURA<span class="text-orange">'26</span></h1>
+        <p class="entry-sub-title">A National Level Technical Symposium</p>
+        <div class="entry-dept-tag">DEPARTMENT OF CIVIL ENGINEERING</div>
+      </div>
+
+      <button type="button" class="btn-struct entry-btn-trigger" id="build-structura-btn">
+        <span>ENTER SYMPOSIUM</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Background Animated Engineering Blueprint Canvas -->
+  <canvas id="site-cad-bg" class="site-cad-canvas"></canvas>
+
+  <!-- ===============================================================
+       04. TOP HEADER (NO BOTTOM NAV • NO ACADEMIC HOST TAB)
+       =============================================================== -->
+  <header class="site-header" id="site-header">
+    <div class="container header-container">
+      
+      <!-- Brand Wrap with College Logo & Title -->
+      <a href="#home" class="header-brand-wrap">
+        <img src="assets/logos/aamec_college_logo.jpg" alt="AAMEC College Official Logo" class="official-header-logo">
+        <div class="brand-text-block">
+          <span class="sympo-title-text">STRUCTURA<span class="text-orange">'26</span></span>
+          <span class="dept-sub-text">National Level Technical Symposium</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation: Home || Events || Registration Now || Check Registration || Location || Contact Us -->
+      <nav class="nav-menu-desktop">
+        <a href="#home" class="nav-link active">Home</a>
+        <a href="#events" class="nav-link">Events</a>
+        <a href="#rules" class="nav-link">General Rules</a>
+        <a href="#registration" class="nav-link cta-link">Registration Now</a>
+        <a href="#check-registration" class="nav-link">Check Registration</a>
+        <a href="#location" class="nav-link">Location</a>
+        <a href="#contact" class="nav-link">Contact Us</a>
+      </nav>
+
+      <!-- Mobile Hamburger Button -->
+      <button class="mobile-toggle-btn" id="mobile-toggle-btn" aria-label="Toggle Navigation Menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+    </div>
+  </header>
+
+  <!-- Mobile Navigation Drawer -->
+  <div class="mobile-nav-panel" id="mobile-nav-panel">
+    <a href="#home" class="nav-link">Home</a>
+    <a href="#events" class="nav-link">Events</a>
+    <a href="#rules" class="nav-link">General Rules</a>
+    <a href="#registration" class="nav-link text-orange">Registration Now</a>
+    <a href="#check-registration" class="nav-link">Check Registration</a>
+    <a href="#location" class="nav-link">Location</a>
+    <a href="#contact" class="nav-link">Contact Us</a>
+  </div>
+
+  <!-- ===============================================================
+       03. CENTERED COLLEGE BRANDING AT VERY TOP
+       =============================================================== -->
+  <div class="college-identity-section" id="home">
+    <div class="container text-center">
+      <div class="college-logo-center-wrap">
+        <img src="assets/logos/aamec_college_logo.jpg" alt="Official AAMEC College Crest" class="official-college-logo-hero">
+      </div>
+      <h2 class="college-title-main">
+        ANJALAI AMMAL MAHALINGAM ENGINEERING COLLEGE
+      </h2>
+      <p class="college-location-sub">
+        KOVILVENNI – 614 403, THIRUVARUR DISTRICT
+      </p>
+    </div>
+  </div>
+
+  <!-- ===============================================================
+       05. MAIN HERO — BALANCED STRUCTURA'26 & COUNTDOWN
+       =============================================================== -->
+  <section class="hero-section">
+    <div class="container text-center hero-vertical-container">
+      
+      <div>
+        <span class="struct-tag orange">DEPARTMENT OF CIVIL ENGINEERING PRESENTS</span>
+      </div>
+
+      <!-- Monumental Yet Balanced Typography -->
+      <h1 class="hero-main-h1">
+        STRUCTURA<span class="text-orange">'26</span>
+      </h1>
+
+      <p class="hero-sympo-desc">
+        A National Level Technical Symposium
+      </p>
+
+      <div class="hero-date-badge">
+        📅 10.10.2026 — Saturday
+      </div>
+
+      <!-- Prominent Minimal Countdown Timer -->
+      <div class="countdown-master-container">
+        <span class="countdown-heading-label">EVENT STARTS IN</span>
+        <div class="countdown-timer-grid" id="sympo-countdown">
+          <div class="countdown-cell">
+            <span class="countdown-num" id="cd-days">00</span>
+            <span class="countdown-unit">DAYS</span>
+          </div>
+          <div class="countdown-separator">:</div>
+          <div class="countdown-cell">
+            <span class="countdown-num" id="cd-hours">00</span>
+            <span class="countdown-unit">HOURS</span>
+          </div>
+          <div class="countdown-separator">:</div>
+          <div class="countdown-cell">
+            <span class="countdown-num" id="cd-minutes">00</span>
+            <span class="countdown-unit">MINUTES</span>
+          </div>
+          <div class="countdown-separator">:</div>
+          <div class="countdown-cell">
+            <span class="countdown-num" id="cd-seconds">00</span>
+            <span class="countdown-unit">SECONDS</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Registration Free & Register Now CTA -->
+      <div class="hero-cta-group">
+        <div class="free-reg-banner">
+          REGISTRATION <span class="text-orange font-bold">FREE</span>
+        </div>
+        <a href="#registration" class="btn-struct btn-hero-cta">
+          <span>REGISTER NOW</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===============================================================
+       22. DEPARTMENT BRANDING AFTER SCROLL (SIDE-ALIGNED)
+       =============================================================== -->
+  <section class="dept-identity-section">
+    <div class="container">
+      <div class="dept-identity-card">
+        <div class="dept-logo-side">
+          <img src="assets/logos/civil_dept_official_logo.png" alt="Civil Engineering Department Official Logo" class="official-dept-logo-img">
+        </div>
+        <div class="dept-info-side">
+          <span class="struct-tag orange" style="margin-bottom:0.5rem;">DEPARTMENT IDENTITY</span>
+          <h2 class="dept-title-text">DEPARTMENT OF CIVIL ENGINEERING</h2>
+          <p class="dept-desc-text">
+            Fostering structural excellence, sustainable materials research, advanced computer-aided design, and visionary infrastructure engineering for national development.
+          </p>
+          <div class="dept-tag-line">
+            DESIGN &bull; CONSTRUCT &bull; SUSTAIN
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===============================================================
+       06. EVENTS SECTION (REALISTIC IMAGERY • OVERLAYS • POPUP MODAL)
+       =============================================================== -->
+  <section class="events-section" id="events">
+    <div class="container">
+      
+      <!-- Section Header -->
+      <div class="section-hdr">
+        <div>
+          <span class="struct-tag orange" style="margin-bottom:0.5rem;">SYMPOSIUM EVENTS</span>
+          <h2 style="font-size: clamp(2.2rem, 5vw, 3.2rem);">TECHNICAL EVENTS</h2>
+        </div>
+        <div style="font-family:var(--font-mono);font-size:0.85rem;color:var(--text-muted);display:flex;align-items:center;gap:0.5rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-orange)" stroke-width="2"><path d="M15 3h6v6M14 10l6.1-6.1M9 21H3v-6M10 14l-6.1 6.1"/></svg>
+          CLICK EVENT CARD TO OPEN SPECIFICATIONS
+        </div>
+      </div>
+
+      <!-- Technical Events Grid (Realistic Image Overlays) -->
+      <div class="events-cards-grid">
+        
+        <!-- 01: PAPER PRESENTATION -->
+        <div class="event-image-card" data-event-id="paper-presentation" tabindex="0" role="button" aria-label="Paper Presentation Details">
+          <div class="event-card-bg-layer" style="background-image: url('assets/images/event_paper.jpg');"></div>
+          <div class="event-card-dark-overlay"></div>
+          
+          <div class="event-card-content">
+            <div class="event-card-top">
+              <span class="event-card-idx">01</span>
+              <span class="struct-tag orange">TECHNICAL EVENT</span>
+            </div>
+            
+            <div class="event-card-bottom">
+              <h3 class="event-card-title">PAPER PRESENTATION</h3>
+              <p class="event-card-summary">1–3 Participants &bull; 6 Official Research Topics</p>
+              <div class="event-card-cta-row">
+                <span class="event-view-link">VIEW RULES & DETAILS &rarr;</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 02: AUTOCAD -->
+        <div class="event-image-card" data-event-id="autocad" tabindex="0" role="button" aria-label="AutoCAD Event Details">
+          <div class="event-card-bg-layer" style="background-image: url('assets/images/event_autocad.jpg');"></div>
+          <div class="event-card-dark-overlay"></div>
+          
+          <div class="event-card-content">
+            <div class="event-card-top">
+              <span class="event-card-idx">02</span>
+              <span class="struct-tag orange">TECHNICAL EVENT</span>
+            </div>
+            
+            <div class="event-card-bottom">
+              <h3 class="event-card-title">AUTOCAD</h3>
+              <p class="event-card-summary">Individual &bull; 45 Mins &bull; Plan, Elevation & Section</p>
+              <div class="event-card-cta-row">
+                <span class="event-view-link">VIEW RULES & DETAILS &rarr;</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 03: CODE CRACKING -->
+        <div class="event-image-card" data-event-id="code-cracking" tabindex="0" role="button" aria-label="Code Cracking Details">
+          <div class="event-card-bg-layer" style="background-image: url('assets/images/event_codecracking.jpg');"></div>
+          <div class="event-card-dark-overlay"></div>
+          
+          <div class="event-card-content">
+            <div class="event-card-top">
+              <span class="event-card-idx">03</span>
+              <span class="struct-tag orange">TECHNICAL EVENT</span>
+            </div>
+            
+            <div class="event-card-bottom">
+              <h3 class="event-card-title">CODE CRACKING</h3>
+              <p class="event-card-summary">Individual &bull; IS 456:2000 Technical Quiz in 2 Stages</p>
+              <div class="event-card-cta-row">
+                <span class="event-view-link">VIEW RULES & DETAILS &rarr;</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Non-Technical Event Heading -->
+      <div class="section-hdr" style="margin-top:4rem;">
+        <div>
+          <span class="struct-tag filled-orange" style="margin-bottom:0.5rem;">THE ONLY NON-TECHNICAL EVENT</span>
+          <h2 style="font-size: clamp(2.2rem, 5vw, 3.2rem);">NON-TECHNICAL EVENT</h2>
+        </div>
+      </div>
+
+      <!-- 04: THE STRUCTURA QUEST -->
+      <div class="event-image-card quest-wide-card" data-event-id="structura-quest" tabindex="0" role="button" aria-label="The Structura Quest Details">
+        <div class="event-card-bg-layer" style="background-image: url('assets/images/event_quest.jpg');"></div>
+        <div class="event-card-dark-overlay"></div>
+        
+        <div class="event-card-content">
+          <div class="event-card-top">
+            <span class="event-card-idx">04</span>
+            <span class="struct-tag filled-orange">NON-TECHNICAL EVENT</span>
+          </div>
+          
+          <div class="event-card-bottom">
+            <h3 class="event-card-title">THE STRUCTURA QUEST</h3>
+            <p class="event-card-summary">Exactly 2 Members &bull; Stage 1: Quiz Battle &bull; Stage 2: DIZE MISSION &bull; Stage 3: Treasure Hunt</p>
+            <div class="event-card-cta-row">
+              <span class="event-view-link text-orange">VIEW COMPLETE QUEST SPECIFICATIONS &rarr;</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===============================================================
+       EVENT DETAILS POPUP MODAL (SMOOTH TRANSITION • NO SEPARATE PAGE)
+       =============================================================== -->
+  <div class="event-modal-backdrop" id="event-modal">
+    <div class="event-modal-dialog">
+      
+      <!-- Close Button -->
+      <button type="button" class="modal-close-btn" id="modal-close-btn" aria-label="Close Event Modal">&times;</button>
+      
+      <!-- Modal Header Banner with Realistic Image Overlay -->
+      <div class="modal-banner-wrap" id="modal-banner-bg">
+        <div class="modal-banner-overlay"></div>
+        <div class="modal-banner-caption">
+          <span class="struct-tag orange" id="modal-badge">EVENT 01</span>
+          <h2 class="modal-title-text" id="modal-title">EVENT TITLE</h2>
+        </div>
+      </div>
+
+      <!-- Modal Body Content -->
+      <div class="modal-body-scrollable" id="modal-content-area">
+        <!-- Injected via JavaScript -->
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===============================================================
+       09. GENERAL RULES (EXACTLY FOUR EXPANDABLE ACCORDION SETS)
+       =============================================================== -->
+  <section class="rules-section" id="rules">
+    <div class="container">
+      
+      <div class="section-hdr">
+        <div>
+          <span class="struct-tag orange" style="margin-bottom:0.5rem;">REGULATORY DIRECTIVES</span>
+          <h2 style="font-size: clamp(2.2rem, 5vw, 3.2rem);">GENERAL RULES</h2>
+        </div>
+      </div>
+
+      <!-- Exactly Four Expandable Accordion Sets -->
+      <div class="rules-accordion-container">
+        
+        <!-- SET 01: REGISTRATION RULES -->
+        <div class="rule-set-item">
+          <button type="button" class="rule-set-header" aria-expanded="false">
+            <span class="rule-num">01</span>
+            <span class="rule-title">Registration Rules</span>
+            <span class="rule-arrow">+</span>
+          </button>
+          <div class="rule-set-body">
+            <ul class="rules-bullet-list">
+              <li>Only participants from other recognized engineering colleges are eligible.</li>
+              <li>Students from host college (Anjalai Ammal Mahalingam Engineering College, Code 8204) are not eligible to register.</li>
+              <li>Minimum 1 technical event must be selected.</li>
+              <li>Maximum 2 technical events can be selected.</li>
+              <li>The Structura Quest can be selected only if at least one technical event is selected.</li>
+              <li>The Structura Quest requires exactly 2 members.</li>
+              <li>Paper Presentation can have 1, 2, or 3 participants.</li>
+              <li>Same mobile number cannot be used for multiple registrations.</li>
+              <li>Team name must be unique across all registrations.</li>
+              <li>No on-spot registration permitted.</li>
+              <li>Registration closes when the overall symposium capacity is reached.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- SET 02: EVENT PARTICIPATION RULES -->
+        <div class="rule-set-item">
+          <button type="button" class="rule-set-header" aria-expanded="false">
+            <span class="rule-num">02</span>
+            <span class="rule-title">Event Participation Rules</span>
+            <span class="rule-arrow">+</span>
+          </button>
+          <div class="rule-set-body">
+            <ul class="rules-bullet-list">
+              <li><strong>Paper Presentation:</strong> Team size 1–3 participants. 13–15 slides. Submit PPTX + PDF backup. File name: <code>Topic Name_College Name</code>. Fonts: Calibri or Times New Roman. Acknowledge sources, avoid plagiarism, and submit before 07.10.2026.</li>
+              <li><strong>AutoCAD:</strong> AutoCAD 2026. Individual event. 45 minutes. Topic: Normal Residential Building / Residential Building. Prepare Plan, Elevation, and Sectional View. Proper dimensions, labels, layers, and standards. Filename: <code>CADD.2026</code>.</li>
+              <li><strong>Code Cracking:</strong> Individual IS 456:2000 technical quiz. Stage 1 (manual paper MCQ, 25 questions, 15 minutes, closed book, one answer per question). Stage 2 (PPT MCQ, 30 seconds per question). Shortlisted Stage 1 qualifiers proceed to Stage 2.</li>
+              <li><strong>The Structura Quest:</strong> Exactly 2 members. Stage 1 — Quiz Battle, Stage 2 — DIZE MISSION (8 challenge formats), Stage 3 — Treasure Hunt (30 mins, strict clue order).</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- SET 03: COMPETITION & DISCIPLINE RULES -->
+        <div class="rule-set-item">
+          <button type="button" class="rule-set-header" aria-expanded="false">
+            <span class="rule-num">03</span>
+            <span class="rule-title">Competition & Discipline Rules</span>
+            <span class="rule-arrow">+</span>
+          </button>
+          <div class="rule-set-body">
+            <ul class="rules-bullet-list">
+              <li>Report before the scheduled event time.</li>
+              <li>Follow coordinator and judge instructions at all times.</li>
+              <li>No copying or unauthorized assistance.</li>
+              <li>No malpractice — malpractice results in immediate disqualification.</li>
+              <li>No discussion or communication where strictly prohibited.</li>
+              <li>Follow event-specific restrictions on electronic devices, mobile phones, and smartwatches.</li>
+              <li>Participants must behave responsibly. Unsafe or disruptive behaviour is not permitted.</li>
+              <li>Judges and coordinators' decisions are final.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- SET 04: SUBMISSION & GENERAL INFORMATION -->
+        <div class="rule-set-item">
+          <button type="button" class="rule-set-header" aria-expanded="false">
+            <span class="rule-num">04</span>
+            <span class="rule-title">Submission & General Information</span>
+            <span class="rule-arrow">+</span>
+          </button>
+          <div class="rule-set-body">
+            <ul class="rules-bullet-list">
+              <li><strong>Symposium Date:</strong> 10.10.2026 — Saturday</li>
+              <li><strong>Registration Fee:</strong> FREE</li>
+              <li><strong>Registration Deadline:</strong> 04.10.2026</li>
+              <li><strong>PPT Submission Deadline:</strong> 07.10.2026</li>
+              <li><strong>Official PPT Submission Email:</strong> <a href="mailto:structuraaamec@gmail.com" class="text-orange font-bold">structuraaamec@gmail.com</a></li>
+              <li><strong class="text-orange">Hospitality Notice:</strong> Food will be provided for Inter-College participants only.</li>
+              <li>No on-spot registration.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===============================================================
+       10. REGISTRATION DETAILS FORM (HEADING: REGISTRATION DETAILS)
+       =============================================================== -->
+  <section class="registration-section" id="registration">
+    <div class="container">
+      
+      <div class="section-hdr">
+        <div>
+          <span class="struct-tag orange" style="margin-bottom:0.5rem;">ONLINE ADMISSIONS</span>
+          <h2 style="font-size: clamp(2.2rem, 5vw, 3.2rem);">REGISTRATION DETAILS</h2>
+        </div>
+      </div>
+
+      <!-- 19. PPT Submission Notice Message Above Form -->
+      <div class="ppt-pre-notice-banner">
+        <div class="ppt-notice-title">📢 PPT Submission</div>
+        <p class="ppt-notice-text">
+          PPT should be submitted before <strong>7th October 2026</strong>.<br>
+          Official submission email: <a href="mailto:structuraaamec@gmail.com" class="text-orange font-bold">structuraaamec@gmail.com</a>
+        </p>
+      </div>
+
+      <!-- Food Notice Banner -->
+      <div class="food-notice-pill">
+        Food will be provided for Inter-College participants only.
+      </div>
+
+      <!-- Registration Form Container -->
+      <div class="reg-card-container" id="reg-form-container">
+        <form id="registration-details-form" onsubmit="return false;">
+
+          <!-- Delegate Basic Fields -->
+          <div class="form-grid-2">
+            <div class="input-grp">
+              <label class="input-lbl" for="reg-fullname">Full Name <span class="req">*</span></label>
+              <input type="text" id="reg-fullname" class="dark-input" placeholder="e.g. S. Karthikeyan" required>
+              <div class="input-err-msg">Full name is required</div>
+            </div>
+
+            <div class="input-grp">
+              <label class="input-lbl" for="reg-email">Email Address <span class="req">*</span></label>
+              <input type="email" id="reg-email" class="dark-input" placeholder="e.g. karthik.civil@gmail.com" required>
+              <div class="input-err-msg">Valid email address is required</div>
+            </div>
+
+            <div class="input-grp">
+              <label class="input-lbl" for="reg-college">College Name with Location <span class="req">*</span></label>
+              <input type="text" id="reg-college" class="dark-input" placeholder="e.g. National Institute of Technology, Tiruchirappalli" required>
+              <div class="input-err-msg">College Name with Location is required</div>
+            </div>
+
+            <div class="input-grp">
+              <label class="input-lbl" for="reg-code">College Code (Max 6 Digits) <span class="req">*</span></label>
+              <input type="text" id="reg-code" class="dark-input" maxlength="6" placeholder="e.g. 1004" required>
+              <div class="input-err-msg">Valid college code required (max 6 digits)</div>
+              
+              <!-- Exact 8204 Host Rejection Alert -->
+              <div class="college-rejection-box" id="college-block-alert">
+                Students from Anjalai Ammal Mahalingam Engineering College are not eligible to register for STRUCTURA'26.
+              </div>
+            </div>
+
+            <div class="input-grp">
+              <label class="input-lbl" for="reg-dept">Department <span class="req">*</span></label>
+              <input type="text" id="reg-dept" class="dark-input" placeholder="e.g. Civil Engineering" required>
+              <div class="input-err-msg">Department is required</div>
+            </div>
+
+            <!-- Year Dropdown: 1st, 2nd, 3rd, 4th -->
+            <div class="input-grp">
+              <label class="input-lbl" for="reg-year">Year <span class="req">*</span></label>
+              <select id="reg-year" class="dark-select" required>
+                <option value="" selected disabled>Select Year</option>
+                <option value="1st">1st</option>
+                <option value="2nd">2nd</option>
+                <option value="3rd">3rd</option>
+                <option value="4th">4th</option>
+              </select>
+              <div class="input-err-msg">Please select your year of study</div>
+            </div>
+
+            <div class="input-grp">
+              <label class="input-lbl" for="reg-mobile">Mobile Number (10-Digit Indian) <span class="req">*</span></label>
+              <input type="tel" id="reg-mobile" class="dark-input" maxlength="10" placeholder="e.g. 9840123456" required>
+              <div class="input-err-msg">Valid 10-digit Indian mobile number required</div>
+            </div>
+          </div>
+
+          <!-- Technical Event Selection Checkboxes (Min 1, Max 2) -->
+          <div class="selection-section-title">
+            TECHNICAL EVENT SELECTION (SELECT 1 OR 2) <span class="req">*</span>
+          </div>
+          
+          <div class="event-checkboxes-stack">
+            <label class="event-checkbox-card" for="chk-event-ppt">
+              <input type="checkbox" id="chk-event-ppt" value="Paper Presentation" class="tech-event-check">
+              <div class="checkbox-custom"></div>
+              <div class="checkbox-text-block">
+                <div class="ev-check-name">01 &mdash; PAPER PRESENTATION</div>
+                <div class="ev-check-desc">1–3 Members &bull; 6 Exact Research Topics</div>
+              </div>
+            </label>
+
+            <label class="event-checkbox-card" for="chk-event-autocad">
+              <input type="checkbox" id="chk-event-autocad" value="AutoCAD" class="tech-event-check">
+              <div class="checkbox-custom"></div>
+              <div class="checkbox-text-block">
+                <div class="ev-check-name">02 &mdash; AUTOCAD</div>
+                <div class="ev-check-desc">Individual &bull; 45 Mins &bull; Plan, Elevation & Section</div>
+              </div>
+            </label>
+
+            <label class="event-checkbox-card" for="chk-event-codecracking">
+              <input type="checkbox" id="chk-event-codecracking" value="Code Cracking" class="tech-event-check">
+              <div class="checkbox-custom"></div>
+              <div class="checkbox-text-block">
+                <div class="ev-check-name">03 &mdash; CODE CRACKING</div>
+                <div class="ev-check-desc">Individual &bull; IS 456:2000 Technical Quiz in 2 Stages</div>
+              </div>
+            </label>
+          </div>
+
+          <!-- The Structura Quest Add-on -->
+          <div class="selection-section-title" style="margin-top:2rem;">
+            NON-TECHNICAL EVENT (OPTIONAL)
+          </div>
+
+          <label class="event-checkbox-card quest-check-card locked" id="quest-check-wrapper" for="chk-event-quest">
+            <input type="checkbox" id="chk-event-quest" value="The Structura Quest" disabled>
+            <div class="checkbox-custom"></div>
+            <div class="checkbox-text-block">
+              <div class="ev-check-name">04 &mdash; THE STRUCTURA QUEST</div>
+              <div class="ev-check-desc">Exactly 2 Members &bull; Quiz Battle, Dize Mission, Treasure Hunt</div>
+              <div class="quest-dependency-note">* Select at least 1 Technical Event first to unlock</div>
+            </div>
+          </label>
+
+          <div id="event-select-err" class="college-rejection-box" style="margin-top:1rem;"></div>
+
+          <!-- Dynamic Paper Presentation Panel -->
+          <div id="ppt-details-panel" class="dynamic-details-panel">
+            <div class="panel-tag-header">PAPER PRESENTATION TEAM SPECIFICATIONS</div>
+            
+            <div class="form-grid-2">
+              <div class="input-grp">
+                <label class="input-lbl" for="ppt-team-name">Team Name <span class="req">*</span></label>
+                <input type="text" id="ppt-team-name" class="dark-input" placeholder="e.g. EcoStructures">
+                <div class="input-err-msg">Team name is mandatory</div>
+              </div>
+
+              <div class="input-grp">
+                <label class="input-lbl" for="ppt-team-size">Team Size <span class="req">*</span></label>
+                <select id="ppt-team-size" class="dark-select">
+                  <option value="1">1 Member</option>
+                  <option value="2">2 Members</option>
+                  <option value="3">3 Members</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="input-grp" style="margin-top:1.25rem;">
+              <label class="input-lbl" for="ppt-topic-sel">Official Topic <span class="req">*</span></label>
+              <select id="ppt-topic-sel" class="dark-select" required>
+                <option value="" selected disabled>-- Select One of the 6 Official Topics --</option>
+                <option value="Bio - Concrete Revolution">1. Bio - Concrete Revolution</option>
+                <option value="Digital twin Infrastructure - monitoring for Smart Civil Structures">2. Digital twin Infrastructure - monitoring for Smart Civil Structures</option>
+                <option value="UAV - LIDAR Topographic Modeling">3. UAV - LIDAR Topographic Modeling</option>
+                <option value="vision AI for Civil Infrastructure">4. vision AI for Civil Infrastructure</option>
+                <option value="Microplastics in water Resources - An emerging Environmental threat">5. Microplastics in water Resources - An emerging Environmental threat</option>
+                <option value="Sustainable 3D-printed construction">6. Sustainable 3D-printed construction</option>
+              </select>
+              <div class="input-err-msg">Please select an official topic</div>
+            </div>
+
+            <div id="ppt-dynamic-members" class="form-grid-2" style="margin-top:1.25rem;"></div>
+          </div>
+
+          <!-- Dynamic Structura Quest Panel -->
+          <div id="quest-details-panel" class="dynamic-details-panel">
+            <div class="panel-tag-header">THE STRUCTURA QUEST SQUAD (EXACTLY 2 MEMBERS)</div>
+            
+            <div class="form-grid-2">
+              <div class="input-grp">
+                <label class="input-lbl" for="quest-team-name">Quest Team Name <span class="req">*</span></label>
+                <input type="text" id="quest-team-name" class="dark-input" placeholder="e.g. EcoStructures">
+                <div class="input-err-msg">Quest team name is compulsory</div>
+              </div>
+            </div>
+
+            <div id="quest-dynamic-members" class="form-grid-2" style="margin-top:1.25rem;"></div>
+          </div>
+
+          <!-- Submit Action (No Rules Checkbox!) -->
+          <div class="form-submit-row">
+            <button type="button" class="btn-struct" id="submit-registration-btn">
+              <span>REGISTER NOW</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- 16. Minimal Success State (NO screenshot/print/download buttons) -->
+      <div class="reg-card-container success-dark-panel" id="success-state-panel">
+        <span class="struct-tag" style="background:#10B981;color:#FFF;border-color:#10B981;margin-bottom:1rem;">
+          REGISTRATION SUCCESSFUL
+        </span>
+        <h3 class="success-title">YOU ARE REGISTERED FOR STRUCTURA'26</h3>
+        <p class="success-email-text">
+          Confirmation email sent to <strong id="success-email-notice" class="text-orange">your email</strong>
+        </p>
+
+        <div class="reg-code-box" id="success-code-display">
+          STR26-XXXX
+        </div>
+
+        <p class="success-footer-note">
+          You can retrieve and inspect your registration credentials anytime using <strong>Check Registration</strong> below.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===============================================================
+       18. CHECK REGISTRATION (CODE-ONLY LOOKUP)
+       =============================================================== -->
+  <section class="check-reg-section" id="check-registration">
+    <div class="container">
+      
+      <div class="section-hdr text-center" style="display:block;">
+        <span class="struct-tag orange" style="margin-bottom:0.5rem;">VERIFICATION PORTAL</span>
+        <h2 style="font-size: clamp(2rem, 4vw, 2.8rem);">CHECK REGISTRATION</h2>
+        <p style="font-size:0.9rem;color:var(--text-secondary);margin-top:0.4rem;">
+          Enter your Unique Registration Code (e.g. <code>STR26-A8K4</code>) to inspect registration details.
+        </p>
+      </div>
+
+      <div class="lookup-bar">
+        <input type="text" id="lookup-code-inp" class="dark-input lookup-code-input" placeholder="ENTER REGISTRATION CODE (STR26-XXXX)">
+        <button type="button" class="btn-struct" id="lookup-submit-btn">
+          VERIFY CODE
+        </button>
+      </div>
+
+      <div id="lookup-result-pane" class="lookup-results-pane"></div>
+
+    </div>
+  </section>
+
+  <!-- ===============================================================
+       21. LOCATION SECTION (CONTINUOUS FLOW • NO EVENT TIME/VENUE)
+       =============================================================== -->
+  <section class="location-section" id="location">
+    <div class="container">
+      
+      <div class="section-hdr">
+        <div>
+          <span class="struct-tag" style="margin-bottom:0.5rem;">CAMPUS LOCATION</span>
+          <h2 style="font-size: clamp(2rem, 4vw, 2.8rem);">LOCATION</h2>
+        </div>
+        <div style="font-family:var(--font-mono);font-size:0.85rem;color:var(--accent-orange);font-weight:700;">
+          KOVILVENNI &bull; NH 83
+        </div>
+      </div>
+
+      <div class="location-grid-2">
+        <div>
+          <p style="font-size:0.95rem;color:var(--text-secondary);margin-bottom:1.75rem;line-height:1.6;">
+            <strong>Anjalai Ammal Mahalingam Engineering College</strong> is situated at Kovilvenni on NH 83 (Thanjavur – Nagapattinam National Highway):
+          </p>
+
+          <div class="route-card">
+            <span class="route-tag">ROUTE 01 // FROM MANNARGUDI</span>
+            <div class="route-path">
+              Mannargudi <span class="text-orange">&rarr;</span> Needamangalam <span class="text-orange">&rarr;</span> Kovilvenni (AAMEC)
+            </div>
+          </div>
+
+          <div class="route-card">
+            <span class="route-tag">ROUTE 02 // FROM THANJAVUR</span>
+            <div class="route-path">
+              Thanjavur <span class="text-orange">&rarr;</span> Saliyamangalam <span class="text-orange">&rarr;</span> Kovilvenni (AAMEC)
+            </div>
+          </div>
+
+          <div class="route-card">
+            <span class="route-tag">ROUTE 03 // FROM THIRUVARUR</span>
+            <div class="route-path">
+              Thiruvarur <span class="text-orange">&rarr;</span> Needamangalam <span class="text-orange">&rarr;</span> Kovilvenni (AAMEC)
+            </div>
+          </div>
+
+          <div style="margin-top:1.75rem;">
+            <a href="https://maps.google.com/?q=Anjalai+Ammal+Mahalingam+Engineering+College+Kovilvenni" target="_blank" rel="noopener noreferrer" class="btn-struct">
+              <span>OPEN IN GOOGLE MAPS</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <div class="map-embed-wrapper">
+            <iframe 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.824368140416!2d79.35123987480467!3d10.74805728939886!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3baac798e2171123%3A0x6b971a1c970ba5fa!2sAnjalai%20Ammal%20Mahalingam%20Engineering%20College!5e0!3m2!1sen!2sin!4v1710420000000!5m2!1sen!2sin" 
+              width="100%" 
+              height="100%" 
+              style="border:0;" 
+              allowfullscreen="" 
+              loading="lazy" 
+              referrerpolicy="no-referrer-when-downgrade"
+              title="AAMEC Campus Location Map">
+            </iframe>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===============================================================
+       20. ORGANIZERS & CONTACT US
+       =============================================================== -->
+  <section class="organizers-section" id="contact">
+    <div class="container">
+      
+      <!-- Principal / HOD -->
+      <div class="section-hdr">
+        <div>
+          <span class="struct-tag" style="margin-bottom:0.5rem;">LEADERSHIP & COMMITTEE</span>
+          <h2 style="font-size: clamp(2rem, 4vw, 2.8rem);">ORGANIZERS</h2>
+        </div>
+      </div>
+
+      <div class="org-cards-row">
+        <!-- Principal -->
+        <div class="org-info-card">
+          <div class="org-role-lbl">Principal</div>
+          <h3 class="org-name-text">Dr K.VELMURUGAN</h3>
+          <p class="org-sub-desc">Anjalai Ammal Mahalingam Engineering College</p>
+        </div>
+
+        <!-- HOD -->
+        <div class="org-info-card">
+          <div class="org-role-lbl">HOD</div>
+          <h3 class="org-name-text">Dr A.SETHUPATHY</h3>
+          <p class="org-sub-desc">Department of Civil Engineering</p>
+        </div>
+
+        <!-- Staff Coordinators -->
+        <div class="org-info-card">
+          <div class="org-role-lbl">Staff Coordinators</div>
+          <h3 class="org-name-text">1. Dr P. JAYARAJ  A/P</h3>
+          <h3 class="org-name-text" style="margin-top:0.35rem;">2. Mrs. S. P. AKSHAYA  A/P</h3>
+          <p class="org-sub-desc">Department of Civil Engineering</p>
+        </div>
+      </div>
+
+      <!-- Student Coordinators & Technical Queries -->
+      <div class="section-hdr" style="margin-top:3rem;">
+        <div>
+          <span class="struct-tag orange" style="margin-bottom:0.5rem;">COMMUNICATION DESK</span>
+          <h2 style="font-size: clamp(2rem, 4vw, 2.8rem);">CONTACT US</h2>
+        </div>
+      </div>
+
+      <div class="org-cards-row">
+        <!-- Student Coordinator 1 -->
+        <div class="org-info-card" style="border-left:4px solid var(--accent-orange);">
+          <div class="org-role-lbl">Student Coordinators</div>
+          <div class="org-contact-subcat">General Inquiries & Registration</div>
+          <h3 class="org-name-text">Vijay Prasanna M</h3>
+          <a href="tel:9025680773" class="contact-phone-link">
+            📞 9025680773
+          </a>
+        </div>
+
+        <!-- Student Coordinator 2 -->
+        <div class="org-info-card" style="border-left:4px solid var(--accent-orange);">
+          <div class="org-role-lbl">Student Coordinators</div>
+          <div class="org-contact-subcat">General Inquiries & Registration</div>
+          <h3 class="org-name-text">Kirsha A</h3>
+          <a href="tel:6382049984" class="contact-phone-link">
+            📞 6382049984
+          </a>
+        </div>
+
+        <!-- Technical Queries: Displayed in BLUE -->
+        <div class="org-info-card" style="border-left:4px solid var(--accent-blue);">
+          <div class="org-role-lbl" style="color:var(--accent-blue);">Technical Queries</div>
+          <div class="org-contact-subcat">Website & Portal Inquiries</div>
+          <h3 class="org-name-text">NITHISHKANNAN K</h3>
+          <a href="tel:7604846082" class="contact-phone-blue">
+            📞 7604846082
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===============================================================
+       MINIMAL EDITORIAL FOOTER
+       =============================================================== -->
+  <footer class="minimal-footer">
+    <div class="container">
+      <div class="footer-inner-flex">
+        <div>
+          <strong style="color:var(--text-primary);">STRUCTURA'26</strong> &bull; Department of Civil Engineering<br>
+          Anjalai Ammal Mahalingam Engineering College, Kovilvenni – 614 403.
+        </div>
+        <div>
+          Official Instagram: <a href="https://instagram.com/structura_2k26" target="_blank" rel="noopener noreferrer" class="footer-insta-link">@structura_2k26</a>
+        </div>
+        <div>
+          &copy; 2026 STRUCTURA'26. All Rights Reserved.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Core JavaScript -->
+  <script src="js/app.js"></script>
+</body>
+</html>

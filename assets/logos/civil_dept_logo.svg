@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <path id="deptCircleTop" d="M 30,100 A 70,70 0 0,1 170,100" fill="none"/>
+    <path id="deptCircleBottom" d="M 170,100 A 70,70 0 0,1 30,100" fill="none"/>
+  </defs>
+  
+  <!-- Outer Ring -->
+  <circle cx="100" cy="100" r="94" fill="#0B0E14" stroke="#FF5500" stroke-width="3"/>
+  <circle cx="100" cy="100" r="82" fill="#121620" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+  
+  <!-- Structural Truss & Bridge Iconography in Center -->
+  <g transform="translate(100, 100)">
+    <!-- Base Abutment -->
+    <rect x="-42" y="16" width="84" height="6" fill="#4B5563"/>
+    
+    <!-- Arch Bridge & Trusses -->
+    <path d="M-36, 16 Q0, -22 36, 16" fill="none" stroke="#FF5500" stroke-width="3.5"/>
+    <line x1="-36" y1="16" x2="36" y2="16" stroke="#FFFFFF" stroke-width="2.5"/>
+    
+    <!-- Truss Ties -->
+    <line x1="-24" y1="16" x2="-24" y2="2" stroke="#FFFFFF" stroke-width="1.5"/>
+    <line x1="-12" y1="16" x2="-12" y2="-7" stroke="#FFFFFF" stroke-width="1.5"/>
+    <line x1="0" y1="16" x2="0" y2="-10" stroke="#FF5500" stroke-width="2"/>
+    <line x1="12" y1="16" x2="12" y2="-7" stroke="#FFFFFF" stroke-width="1.5"/>
+    <line x1="24" y1="16" x2="24" y2="2" stroke="#FFFFFF" stroke-width="1.5"/>
+    
+    <!-- Surveying Theodolite / Plummet Symbol Above -->
+    <path d="M0, -14 L-8, -36 L8, -36 Z" fill="none" stroke="#FF5500" stroke-width="1.5"/>
+    <circle cx="0" cy="-38" r="4" fill="#FFFFFF"/>
+    <line x1="-14" y1="-38" x2="14" y2="-38" stroke="#FF5500" stroke-width="2"/>
+  </g>
+  
+  <!-- Inscription Text -->
+  <text font-family="'Space Grotesk', sans-serif" font-size="8.8" font-weight="800" fill="#FFFFFF" letter-spacing="1.2">
+    <textPath href="#deptCircleTop" startOffset="50%" text-anchor="middle">
+      DEPARTMENT OF CIVIL ENGG.
+    </textPath>
+  </text>
+  <text font-family="'Space Grotesk', sans-serif" font-size="8.5" font-weight="700" fill="#FF5500" letter-spacing="1">
+    <textPath href="#deptCircleBottom" startOffset="50%" text-anchor="middle">
+      AAMEC • STRUCTURA '26
+    </textPath>
+  </text>
+  
+  <!-- Side Markers -->
+  <polygon points="26,100 30,96 30,104" fill="#FF5500"/>
+  <polygon points="174,100 170,96 170,104" fill="#FF5500"/>
+</svg>
