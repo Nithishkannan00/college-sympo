@@ -4,12 +4,18 @@
  * Department of Civil Engineering | AAMEC
  * ============================================================
  * 
- * Instructions:
- * 1. Open Google Sheets -> Extensions -> Apps Script.
- * 2. Paste this entire Code.gs file.
- * 3. Run setupSheet() once to initialize sheet headers.
- * 4. Deploy as Web App -> Execute as: "Me", Who has access: "Anyone".
- * 5. Copy the deployed Web App URL and paste it into CONFIG.GAS_WEB_APP_URL in js/app.js.
+ * 8-Column Google Sheet Schema:
+ * 1. Registration Code
+ * 2. Team Name
+ * 3. Member 1 Details
+ * 4. Member 2 Details
+ * 5. Member 3 Details
+ * 6. Events
+ * 7. PPT Topic
+ * 8. Registration Date
+ * 
+ * Each Member Details field format:
+ * Full Name | College Name with Location | College Code | Department | Year | Email | Mobile
  */
 
 const CONFIG = {
@@ -17,11 +23,13 @@ const CONFIG = {
   HOST_COLLEGE_CODE: "8204",
   SHEET_NAME: "Registrations",
   EVENT_NAME: "STRUCTURA'26",
-  EVENT_DATE: "10.10.2026 (Saturday)"
+  EVENT_DATE: "10.10.2026 — Saturday",
+  OFFICIAL_EMAIL: "structuraaamec@gmail.com",
+  COLLEGE_NAME: "Anjalai Ammal Mahalingam Engineering College, Kovilvenni"
 };
 
 /**
- * Initialize Google Sheet with structured headers
+ * Initialize / Configure Google Sheet with the exact 8-column header structure
  */
 function setupSheet() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -32,169 +40,83 @@ function setupSheet() {
   
   const headers = [
     "Registration Code",
-    "Timestamp",
-    "Full Name",
-    "College Name",
-    "College Location",
-    "College Code",
-    "Department",
-    "Year",
-    "Email",
-    "Mobile",
-    "Selected Technical Events",
-    "PPT Team Name",
-    "PPT Team Size",
-    "PPT Members",
+    "Team Name",
+    "Member 1 Details",
+    "Member 2 Details",
+    "Member 3 Details",
+    "Events",
     "PPT Topic",
-    "Structura Quest Selected",
-    "Structura Quest Team Name",
-    "Structura Quest Members",
-    "Status"
+    "Registration Date"
   ];
   
   sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-  sheet.getRange(1, 1, 1, headers.length).setFontWeight("bold").setBackground("#0047FF").setFontColor("#FFFFFF");
+  sheet.getRange(1, 1, 1, headers.length)
+    .setFontWeight("bold")
+    .setBackground("#0F172A")
+    .setFontColor("#FF5500");
   sheet.setFrozenRows(1);
 }
 
 /**
- * Handle POST Requests from Web App Form
+ * Helper: Format individual member profile into standard pipe-delimited string:
+ * Full Name | College Name with Location | College Code | Department | Year | Email | Mobile
+ */
+function formatMemberDetails(mem) {
+  if (!mem || !mem.fullName) return "";
+  return [
+    mem.fullName || "",
+    mem.collegeName || "",
+    mem.collegeCode || "",
+    mem.department || "",
+    mem.year || "",
+    mem.email || "",
+    mem.mobile || ""
+  ].map(v => String(v).trim()).join(" | ");
+}
+
+/**
+ * Helper: Parse formatted member string back into an object
+ */
+function parseMemberDetails(str) {
+  if (!str) return null;
+  const parts = String(str).split(" | ").map(s => s.trim());
+  return {
+    fullName: parts[0] || "",
+    collegeName: parts[1] || "",
+    collegeCode: parts[2] || "",
+    department: parts[3] || "",
+    year: parts[4] || "",
+    email: parts[5] || "",
+    mobile: parts[6] || ""
+  };
+}
+
+/**
+ * Handle POST Requests from Web App Form & Actions
  */
 function doPost(e) {
   const lock = LockService.getScriptLock();
   try {
-    lock.waitLock(15000); // Prevent race condition on max 30 registrations
+    lock.waitLock(15000); // Concurrency protection against race conditions on max 30 registrations
     
-    const data = JSON.parse(e.postData.contents);
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    let sheet = ss.getSheetByName(CONFIG.SHEET_NAME);
-    if (!sheet) {
-      setupSheet();
-      sheet = ss.getSheetByName(CONFIG.SHEET_NAME);
-    }
-    
-    // 1. Check Active Registration Capacity Limit (Max 30)
-    const rows = sheet.getDataRange().getValues();
-    let activeCount = 0;
-    const existingMobiles = new Set();
-    const existingTeamNames = new Set();
-    const existingCodes = new Set();
-    
-    for (let i = 1; i < rows.length; i++) {
-      const row = rows[i];
-      const status = row[18]; // Status column
-      if (status === "ACTIVE" || !status) {
-        activeCount++;
-        if (row[9]) existingMobiles.add(String(row[9]).trim());
-        if (row[11]) existingTeamNames.add(String(row[11]).trim().toLowerCase());
-        if (row[16]) existingTeamNames.add(String(row[16]).trim().toLowerCase());
+    let contents = {};
+    if (e && e.postData && e.postData.contents) {
+      try {
+        contents = JSON.parse(e.postData.contents);
+      } catch (err) {
+        contents = e.parameter || {};
       }
-      if (row[0]) existingCodes.add(String(row[0]).trim());
+    } else if (e && e.parameter) {
+      contents = e.parameter;
     }
     
-    if (activeCount >= CONFIG.MAX_ACTIVE_REGISTRATIONS) {
-      return createJsonResponse({
-        success: false,
-        error: "Registration closed. Maximum limit of 30 active registrations has been reached."
-      });
+    const action = contents.action || "register";
+    
+    if (action === "checkRegistration") {
+      return handleCheckRegistration(contents.registrationCode);
     }
     
-    // 2. Server-side Validations
-    // College Code 8204 Block
-    if (String(data.collegeCode).trim() === CONFIG.HOST_COLLEGE_CODE) {
-      return createJsonResponse({
-        success: false,
-        error: "Students from Anjalai Ammal Mahalingam Engineering College are not eligible to register for STRUCTURA'26."
-      });
-    }
-    
-    // Mobile Validation
-    const mobile = String(data.mobile).trim();
-    if (!/^[6-9]\d{9}$/.test(mobile)) {
-      return createJsonResponse({
-        success: false,
-        error: "Invalid mobile number. Must be a 10-digit Indian number."
-      });
-    }
-    if (existingMobiles.has(mobile)) {
-      return createJsonResponse({
-        success: false,
-        error: "This mobile number is already registered for STRUCTURA'26."
-      });
-    }
-    
-    // Technical Events Range
-    const techEvents = data.techEvents || [];
-    if (techEvents.length < 1 || techEvents.length > 2) {
-      return createJsonResponse({
-        success: false,
-        error: "Must select between 1 and 2 technical events."
-      });
-    }
-    
-    // Structura Quest Eligibility
-    if (data.structuraQuestSelected && techEvents.length === 0) {
-      return createJsonResponse({
-        success: false,
-        error: "Structura Quest requires at least 1 technical event."
-      });
-    }
-    
-    // Team Name Uniqueness
-    if (data.pptTeamName && existingTeamNames.has(String(data.pptTeamName).trim().toLowerCase())) {
-      return createJsonResponse({
-        success: false,
-        error: "Team name has already been taken. Please enter a new team name."
-      });
-    }
-    
-    if (data.questTeamName && existingTeamNames.has(String(data.questTeamName).trim().toLowerCase()) && data.questTeamName !== data.pptTeamName) {
-      return createJsonResponse({
-        success: false,
-        error: "Team name has already been taken. Please enter a new team name."
-      });
-    }
-    
-    // 3. Generate Unique Code
-    let code = data.registrationCode;
-    if (!code || existingCodes.has(code)) {
-      code = generateUniqueCode(existingCodes);
-    }
-    
-    const timestamp = Utilities.formatDate(new Date(), "Asia/Kolkata", "yyyy-MM-dd HH:mm:ss");
-    
-    // 4. Append row to Google Sheet
-    sheet.appendRow([
-      code,
-      timestamp,
-      data.fullName,
-      data.collegeName,
-      data.collegeLocation,
-      data.collegeCode,
-      data.department,
-      data.year,
-      data.email,
-      mobile,
-      techEvents.join(", "),
-      data.pptTeamName || "",
-      data.pptTeamSize || "",
-      (data.pptMembers || []).join(", "),
-      data.pptTopic || "",
-      data.structuraQuestSelected ? "YES" : "NO",
-      data.questTeamName || "",
-      (data.questMembers || []).join(", "),
-      "ACTIVE"
-    ]);
-    
-    // 5. Send Confirmation Email (Contains ONLY Event details, Member details, Code - NO coordinator phone numbers)
-    sendConfirmationEmail(data.email, code, data);
-    
-    return createJsonResponse({
-      success: true,
-      registrationCode: code,
-      activeCount: activeCount + 1,
-      remaining: CONFIG.MAX_ACTIVE_REGISTRATIONS - (activeCount + 1)
-    });
+    return handleRegister(contents);
     
   } catch (err) {
     return createJsonResponse({
@@ -207,59 +129,259 @@ function doPost(e) {
 }
 
 /**
- * Handle GET Requests (Lookup Registration / Capacity Check)
+ * Registration Handler
  */
-function doGet(e) {
+function handleRegister(data) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getSheetByName(CONFIG.SHEET_NAME);
+  let sheet = ss.getSheetByName(CONFIG.SHEET_NAME);
   if (!sheet) {
-    return createJsonResponse({ success: false, error: "Sheet not initialized" });
+    setupSheet();
+    sheet = ss.getSheetByName(CONFIG.SHEET_NAME);
   }
   
-  const codeParam = e.parameter.code;
   const rows = sheet.getDataRange().getValues();
+  let activeCount = 0;
+  const existingMobiles = new Set();
+  const existingTeamNames = new Set();
+  const existingCodes = new Set();
   
-  // Return Capacity Status
-  if (!codeParam) {
-    let activeCount = 0;
-    for (let i = 1; i < rows.length; i++) {
-      if (rows[i][18] === "ACTIVE" || !rows[i][18]) activeCount++;
-    }
-    return createJsonResponse({
-      success: true,
-      activeCount: activeCount,
-      maxCapacity: CONFIG.MAX_ACTIVE_REGISTRATIONS,
-      remaining: Math.max(0, CONFIG.MAX_ACTIVE_REGISTRATIONS - activeCount)
+  // Row 0 is header
+  for (let i = 1; i < rows.length; i++) {
+    const row = rows[i];
+    const code = String(row[0] || "").trim();
+    if (!code) continue;
+    
+    activeCount++;
+    existingCodes.add(code.toUpperCase());
+    
+    const teamName = String(row[1] || "").trim().toLowerCase();
+    if (teamName) existingTeamNames.add(teamName);
+    
+    // Extract mobiles from Member 1, 2, 3
+    [row[2], row[3], row[4]].forEach(memStr => {
+      const mem = parseMemberDetails(memStr);
+      if (mem && mem.mobile) existingMobiles.add(String(mem.mobile).trim());
     });
   }
   
-  // Search by Unique Code
-  const searchCode = String(codeParam).trim().toUpperCase();
+  // 1. Check Maximum Capacity (30 Active Registrations)
+  if (activeCount >= CONFIG.MAX_ACTIVE_REGISTRATIONS) {
+    return createJsonResponse({
+      success: false,
+      error: "Registration is currently unavailable. Maximum limit reached."
+    });
+  }
+  
+  // 2. Validate Member 1 (Lead / Registrant)
+  const mem1 = data.member1 || {
+    fullName: data.fullName,
+    collegeName: data.collegeName,
+    collegeCode: data.collegeCode,
+    department: data.department,
+    year: data.year,
+    email: data.email,
+    mobile: data.mobile
+  };
+  
+  // College Code 8204 Rejection Check
+  if (String(mem1.collegeCode).trim() === CONFIG.HOST_COLLEGE_CODE) {
+    return createJsonResponse({
+      success: false,
+      error: "Students from Anjalai Ammal Mahalingam Engineering College are not eligible to register for STRUCTURA'26."
+    });
+  }
+  
+  // Mobile Format & Uniqueness Validation
+  const mobile1 = String(mem1.mobile).trim();
+  if (!/^[6-9]\d{9}$/.test(mobile1)) {
+    return createJsonResponse({
+      success: false,
+      error: "Mobile number must be a valid 10-digit Indian number."
+    });
+  }
+  if (existingMobiles.has(mobile1)) {
+    return createJsonResponse({
+      success: false,
+      error: "This mobile number is already registered for STRUCTURA'26."
+    });
+  }
+  
+  // 3. Technical Events Validation
+  const techEvents = data.techEvents || [];
+  if (techEvents.length < 1 || techEvents.length > 2) {
+    return createJsonResponse({
+      success: false,
+      error: "Please select 1 or 2 technical events."
+    });
+  }
+  
+  // Structura Quest Eligibility
+  const isQuestSelected = Boolean(data.structuraQuestSelected);
+  if (isQuestSelected && techEvents.length === 0) {
+    return createJsonResponse({
+      success: false,
+      error: "The Structura Quest requires at least 1 technical event to be selected."
+    });
+  }
+  
+  const allEventsList = [...techEvents];
+  if (isQuestSelected) {
+    allEventsList.push("THE STRUCTURA QUEST");
+  }
+  const eventsString = allEventsList.join(", ");
+  
+  // 4. Team Name Logic & Validation (Required only for PPT)
+  const hasPPT = techEvents.includes("Paper Presentation");
+  const masterTeamName = hasPPT ? String(data.pptTeamName || data.teamName || "").trim() : "";
+  
+  if (hasPPT) {
+    if (!masterTeamName) {
+      return createJsonResponse({
+        success: false,
+        error: "Team name is required for Paper Presentation."
+      });
+    }
+    if (existingTeamNames.has(masterTeamName.toLowerCase())) {
+      return createJsonResponse({
+        success: false,
+        error: "Team name has already been taken. Please enter a new team name."
+      });
+    }
+  }
+  
+  // 5. Member 2 and Member 3 validation
+  let mem2 = data.member2 || null;
+  let mem3 = data.member3 || null;
+  
+  // Validate additional member mobiles if present
+  if (mem2 && mem2.mobile) {
+    const mob2 = String(mem2.mobile).trim();
+    if (existingMobiles.has(mob2)) {
+      return createJsonResponse({
+        success: false,
+        error: `Mobile number ${mob2} is already registered for STRUCTURA'26.`
+      });
+    }
+    if (String(mem2.collegeCode).trim() === CONFIG.HOST_COLLEGE_CODE) {
+      return createJsonResponse({
+        success: false,
+        error: "Students from Anjalai Ammal Mahalingam Engineering College are not eligible to register for STRUCTURA'26."
+      });
+    }
+  }
+  
+  if (mem3 && mem3.mobile) {
+    const mob3 = String(mem3.mobile).trim();
+    if (existingMobiles.has(mob3)) {
+      return createJsonResponse({
+        success: false,
+        error: `Mobile number ${mob3} is already registered for STRUCTURA'26.`
+      });
+    }
+    if (String(mem3.collegeCode).trim() === CONFIG.HOST_COLLEGE_CODE) {
+      return createJsonResponse({
+        success: false,
+        error: "Students from Anjalai Ammal Mahalingam Engineering College are not eligible to register for STRUCTURA'26."
+      });
+    }
+  }
+  
+  // 6. Generate Unique Random Non-sequential Registration Code STR26-XXXX
+  const code = generateUniqueCode(existingCodes);
+  const regDate = Utilities.formatDate(new Date(), "Asia/Kolkata", "dd.MM.yyyy HH:mm:ss");
+  
+  const m1Str = formatMemberDetails(mem1);
+  const m2Str = formatMemberDetails(mem2);
+  const m3Str = formatMemberDetails(mem3);
+  const pptTopic = hasPPT ? String(data.pptTopic || "").trim() : "";
+  
+  // 7. Append exact 8-column row into Google Sheets
+  sheet.appendRow([
+    code,
+    masterTeamName,
+    m1Str,
+    m2Str,
+    m3Str,
+    eventsString,
+    pptTopic,
+    regDate
+  ]);
+  
+  // 8. Send Confirmation Emails to all registered members
+  const memberList = [mem1, mem2, mem3].filter(m => m && m.email);
+  memberList.forEach(m => {
+    try {
+      sendConfirmationEmail(m.email, code, {
+        member: m,
+        allMembers: [mem1, mem2, mem3].filter(Boolean),
+        eventsString: eventsString,
+        pptTopic: pptTopic,
+        teamName: masterTeamName,
+        regDate: regDate
+      });
+    } catch (err) {
+      console.warn("Email send failed for", m.email, err);
+    }
+  });
+  
+  return createJsonResponse({
+    success: true,
+    registrationCode: code,
+    activeCount: activeCount + 1
+  });
+}
+
+/**
+ * Handle GET Requests (Lookup Registration by Code)
+ */
+function doGet(e) {
+  const codeParam = (e && e.parameter && (e.parameter.code || e.parameter.registrationCode)) || "";
+  const action = (e && e.parameter && e.parameter.action) || "";
+  
+  if (action === "checkRegistration" || codeParam) {
+    return handleCheckRegistration(codeParam);
+  }
+  
+  // Default status check (Capacity info never shown to user, only system health)
+  return createJsonResponse({
+    success: true,
+    service: "STRUCTURA'26 Backend API",
+    status: "ONLINE"
+  });
+}
+
+/**
+ * Code-Only Lookup Handler
+ */
+function handleCheckRegistration(codeQuery) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(CONFIG.SHEET_NAME);
+  if (!sheet) {
+    return createJsonResponse({ success: false, error: "Database not initialized" });
+  }
+  
+  const code = String(codeQuery || "").trim().toUpperCase();
+  if (!code) {
+    return createJsonResponse({ success: false, error: "Please provide a registration code." });
+  }
+  
+  const rows = sheet.getDataRange().getValues();
   for (let i = 1; i < rows.length; i++) {
     const row = rows[i];
-    if (String(row[0]).trim().toUpperCase() === searchCode) {
+    const rowCode = String(row[0] || "").trim().toUpperCase();
+    
+    if (rowCode === code) {
       return createJsonResponse({
         success: true,
         registration: {
           registrationCode: row[0],
-          timestamp: row[1],
-          fullName: row[2],
-          collegeName: row[3],
-          collegeLocation: row[4],
-          collegeCode: row[5],
-          department: row[6],
-          year: row[7],
-          email: row[8],
-          mobile: row[9],
-          techEvents: row[10],
-          pptTeamName: row[11],
-          pptTeamSize: row[12],
-          pptMembers: row[13],
-          pptTopic: row[14],
-          structuraQuest: row[15],
-          questTeamName: row[16],
-          questMembers: row[17],
-          status: row[18]
+          teamName: row[1],
+          member1: parseMemberDetails(row[2]),
+          member2: parseMemberDetails(row[3]),
+          member3: parseMemberDetails(row[4]),
+          events: row[5],
+          pptTopic: row[6],
+          registrationDate: row[7]
         }
       });
     }
@@ -267,12 +389,12 @@ function doGet(e) {
   
   return createJsonResponse({
     success: false,
-    error: "Registration code not found"
+    error: "Registration not found for code: " + code
   });
 }
 
 /**
- * Helper: Generate Non-sequential Unique Code STR26-XXXX
+ * Generate Unique Random Non-sequential Registration Code STR26-XXXX
  */
 function generateUniqueCode(existingSet) {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -288,47 +410,67 @@ function generateUniqueCode(existingSet) {
 
 /**
  * Send Confirmation Email
- * Strictly includes ONLY event details, member details, and registration code.
+ * Strictly contains ONLY:
+ * - STRUCTURA'26 event details
+ * - Selected event(s)
+ * - PPT topic if applicable
+ * - Member details
+ * - Registration code
+ * (NO coordinator phone numbers or coordinator details)
  */
-function sendConfirmationEmail(recipientEmail, code, data) {
+function sendConfirmationEmail(recipientEmail, code, details) {
   if (!recipientEmail) return;
   
-  const subject = `Registration Confirmed: STRUCTURA'26 [${code}]`;
+  const subject = `Registration Successful: STRUCTURA'26 [${code}]`;
   
-  let body = `STRUCTURA'26 — OFFICIAL REGISTRATION CONFIRMATION\n`;
-  body += `Department of Civil Engineering | Anjalai Ammal Mahalingam Engineering College\n`;
-  body += `============================================================\n\n`;
-  body += `REGISTRATION CODE: ${code}\n\n`;
-  body += `Participant Details:\n`;
-  body += `• Name: ${data.fullName}\n`;
-  body += `• College: ${data.collegeName} (Location: ${data.collegeLocation}, Code: ${data.collegeCode})\n`;
-  body += `• Department: ${data.department} | ${data.year}\n\n`;
-  body += `Event Details:\n`;
-  body += `• Date: ${CONFIG.EVENT_DATE}\n`;
-  body += `• Technical Events: ${(data.techEvents || []).join(', ')}\n`;
+  let body = `STRUCTURA'26 — REGISTRATION CONFIRMATION\n`;
+  body += `A National Level Technical Symposium\n`;
+  body += `Department of Civil Engineering | Anjalai Ammal Mahalingam Engineering College, Kovilvenni\n`;
+  body += `======================================================================\n\n`;
   
-  if (data.techEvents && data.techEvents.indexOf('Paper Presentation') !== -1) {
-    body += `• PPT Team Name: ${data.pptTeamName} (${data.pptTeamSize} Members)\n`;
-    body += `• PPT Topic: ${data.pptTopic}\n`;
-    body += `• PPT Members: ${(data.pptMembers || []).join(', ')}\n`;
+  body += `REGISTRATION CODE: ${code}\n`;
+  body += `REGISTRATION DATE: ${details.regDate}\n\n`;
+  
+  if (details.teamName) {
+    body += `TEAM NAME: ${details.teamName}\n\n`;
   }
   
-  if (data.structuraQuestSelected) {
-    body += `• Non-Technical Event: THE STRUCTURA QUEST (Stages: Quiz Battle, Dize Mission, Treasure Hunt)\n`;
-    body += `• Quest Team Name: ${data.questTeamName}\n`;
-    body += `• Quest Members: ${(data.questMembers || []).join(', ')}\n`;
+  body += `SELECTED EVENTS:\n`;
+  body += `• ${details.eventsString}\n\n`;
+  
+  if (details.pptTopic) {
+    body += `PAPER PRESENTATION TOPIC:\n`;
+    body += `• ${details.pptTopic}\n\n`;
   }
   
-  body += `\nImportant Notes:\n`;
-  body += `• Your unique registration code is: ${code}\n`;
+  body += `REGISTERED PARTICIPANT(S):\n`;
+  details.allMembers.forEach((m, idx) => {
+    body += `Member ${idx + 1}:\n`;
+    body += `  Name: ${m.fullName}\n`;
+    body += `  College: ${m.collegeName} (Code: ${m.collegeCode})\n`;
+    body += `  Department & Year: ${m.department} | ${m.year} Year\n`;
+    body += `  Contact: +91 ${m.mobile} | ${m.email}\n\n`;
+  });
+  
+  body += `IMPORTANT SYMPOSIUM GUIDELINES:\n`;
+  body += `• Symposium Date: ${CONFIG.EVENT_DATE}\n`;
+  body += `• Registration: FREE\n`;
   body += `• Food will be provided for Inter-College participants only.\n`;
-  body += `• PPT Submissions must be sent before 07.10.2026 to structuraaamec@gmail.com\n\n`;
-  body += `Thank you for registering for STRUCTURA'26!`;
+  if (details.pptTopic) {
+    body += `• PPT Submissions must be sent before 7th October 2026 to ${CONFIG.OFFICIAL_EMAIL}\n`;
+  }
+  body += `• You can verify your registration anytime using the "Check Registration" portal on our website.\n\n`;
   
-  MailApp.sendEmail(recipientEmail, subject, body);
+  body += `We look forward to your active participation in STRUCTURA'26!\n`;
+  
+  MailApp.sendEmail({
+    to: recipientEmail,
+    subject: subject,
+    body: body
+  });
 }
 
-function createJsonResponse(data) {
-  return ContentService.createTextOutput(JSON.stringify(data))
+function createJsonResponse(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
 }

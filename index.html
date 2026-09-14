@@ -43,21 +43,21 @@
   <canvas id="site-cad-bg" class="site-cad-canvas"></canvas>
 
   <!-- ===============================================================
-       04. TOP HEADER (NO BOTTOM NAV • NO ACADEMIC HOST TAB)
+       04. TOP HEADER (NO BOTTOM NAV • NO ACADEMIC HOST)
        =============================================================== -->
   <header class="site-header" id="site-header">
     <div class="container header-container">
       
-      <!-- Brand Wrap with College Logo & Title -->
+      <!-- Brand Wrap with Official College Logo & Title -->
       <a href="#home" class="header-brand-wrap">
-        <img src="assets/logos/aamec_college_logo.jpg" alt="AAMEC College Official Logo" class="official-header-logo">
+        <img src="assets/logos/aamec_college_logo.jpg" alt="AAMEC Official College Crest" class="official-header-logo">
         <div class="brand-text-block">
           <span class="sympo-title-text">STRUCTURA<span class="text-orange">'26</span></span>
           <span class="dept-sub-text">National Level Technical Symposium</span>
         </div>
       </a>
 
-      <!-- Desktop Navigation: Home || Events || Registration Now || Check Registration || Location || Contact Us -->
+      <!-- Desktop Navigation: Home || Events || General Rules || Registration Now || Check Registration || Location || Contact Us -->
       <nav class="nav-menu-desktop">
         <a href="#home" class="nav-link active">Home</a>
         <a href="#events" class="nav-link">Events</a>
@@ -80,15 +80,24 @@
     </div>
   </header>
 
-  <!-- Mobile Navigation Drawer -->
+  <!-- Mobile Navigation Slide-in Side Drawer & Overlay Backdrop -->
+  <div class="mobile-drawer-backdrop" id="mobile-drawer-backdrop"></div>
   <div class="mobile-nav-panel" id="mobile-nav-panel">
-    <a href="#home" class="nav-link">Home</a>
-    <a href="#events" class="nav-link">Events</a>
-    <a href="#rules" class="nav-link">General Rules</a>
-    <a href="#registration" class="nav-link text-orange">Registration Now</a>
-    <a href="#check-registration" class="nav-link">Check Registration</a>
-    <a href="#location" class="nav-link">Location</a>
-    <a href="#contact" class="nav-link">Contact Us</a>
+    <div class="mobile-drawer-header">
+      <div class="drawer-brand">
+        <span class="sympo-title-text">STRUCTURA<span class="text-orange">'26</span></span>
+      </div>
+      <button type="button" class="drawer-close-btn" id="drawer-close-btn" aria-label="Close Navigation Drawer">&times;</button>
+    </div>
+    <div class="mobile-drawer-links">
+      <a href="#home" class="nav-link">Home</a>
+      <a href="#events" class="nav-link">Events</a>
+      <a href="#rules" class="nav-link">General Rules</a>
+      <a href="#registration" class="nav-link text-orange">Registration Now</a>
+      <a href="#check-registration" class="nav-link">Check Registration</a>
+      <a href="#location" class="nav-link">Location</a>
+      <a href="#contact" class="nav-link">Contact Us</a>
+    </div>
   </div>
 
   <!-- ===============================================================
@@ -118,7 +127,7 @@
         <span class="struct-tag orange">DEPARTMENT OF CIVIL ENGINEERING PRESENTS</span>
       </div>
 
-      <!-- Monumental Yet Balanced Typography -->
+      <!-- Monumental Yet Balanced Typography (Change 4: Clean, No Clipping) -->
       <h1 class="hero-main-h1">
         STRUCTURA<span class="text-orange">'26</span>
       </h1>
@@ -172,16 +181,13 @@
   </section>
 
   <!-- ===============================================================
-       22. DEPARTMENT BRANDING AFTER SCROLL (SIDE-ALIGNED)
+       DEPARTMENT IDENTITY SECTION (NO CIVIL DEPT LOGO)
        =============================================================== -->
   <section class="dept-identity-section">
     <div class="container">
       <div class="dept-identity-card">
-        <div class="dept-logo-side">
-          <img src="assets/logos/civil_dept_official_logo.png" alt="Civil Engineering Department Official Logo" class="official-dept-logo-img">
-        </div>
         <div class="dept-info-side">
-          <span class="struct-tag orange" style="margin-bottom:0.5rem;">DEPARTMENT IDENTITY</span>
+          <span class="struct-tag orange" style="margin-bottom:0.75rem;">DEPARTMENT IDENTITY</span>
           <h2 class="dept-title-text">DEPARTMENT OF CIVIL ENGINEERING</h2>
           <p class="dept-desc-text">
             Fostering structural excellence, sustainable materials research, advanced computer-aided design, and visionary infrastructure engineering for national development.
@@ -454,16 +460,16 @@
         </div>
       </div>
 
-      <!-- 19. PPT Submission Notice Message Above Form -->
+      <!-- PPT Submission Notice Message Above Form (Change L) -->
       <div class="ppt-pre-notice-banner">
         <div class="ppt-notice-title">📢 PPT Submission</div>
         <p class="ppt-notice-text">
           PPT should be submitted before <strong>7th October 2026</strong>.<br>
-          Official submission email: <a href="mailto:structuraaamec@gmail.com" class="text-orange font-bold">structuraaamec@gmail.com</a>
+          Submission email: <a href="mailto:structuraaamec@gmail.com" class="text-orange font-bold">structuraaamec@gmail.com</a>
         </p>
       </div>
 
-      <!-- Food Notice Banner -->
+      <!-- Food Notice Banner (Change M) -->
       <div class="food-notice-pill">
         Food will be provided for Inter-College participants only.
       </div>
@@ -472,7 +478,8 @@
       <div class="reg-card-container" id="reg-form-container">
         <form id="registration-details-form" onsubmit="return false;">
 
-          <!-- Delegate Basic Fields -->
+          <!-- Delegate Basic Fields (Member 1 / Lead) -->
+          <div class="panel-tag-header">MEMBER 1 DETAILS (REGISTRANT / TEAM LEAD)</div>
           <div class="form-grid-2">
             <div class="input-grp">
               <label class="input-lbl" for="reg-fullname">Full Name <span class="req">*</span></label>
@@ -582,7 +589,7 @@
 
           <!-- Dynamic Paper Presentation Panel -->
           <div id="ppt-details-panel" class="dynamic-details-panel">
-            <div class="panel-tag-header">PAPER PRESENTATION TEAM SPECIFICATIONS</div>
+            <div class="panel-tag-header">PAPER PRESENTATION SPECIFICATIONS & TEAM</div>
             
             <div class="form-grid-2">
               <div class="input-grp">
@@ -615,25 +622,17 @@
               <div class="input-err-msg">Please select an official topic</div>
             </div>
 
-            <div id="ppt-dynamic-members" class="form-grid-2" style="margin-top:1.25rem;"></div>
+            <!-- Dynamic Additional PPT Member Full Detail Forms -->
+            <div id="ppt-dynamic-members" style="margin-top:1.5rem;"></div>
           </div>
 
-          <!-- Dynamic Structura Quest Panel -->
+          <!-- Dynamic Structura Quest Panel (Exactly 2 Members) -->
           <div id="quest-details-panel" class="dynamic-details-panel">
             <div class="panel-tag-header">THE STRUCTURA QUEST SQUAD (EXACTLY 2 MEMBERS)</div>
-            
-            <div class="form-grid-2">
-              <div class="input-grp">
-                <label class="input-lbl" for="quest-team-name">Quest Team Name <span class="req">*</span></label>
-                <input type="text" id="quest-team-name" class="dark-input" placeholder="e.g. EcoStructures">
-                <div class="input-err-msg">Quest team name is compulsory</div>
-              </div>
-            </div>
-
-            <div id="quest-dynamic-members" class="form-grid-2" style="margin-top:1.25rem;"></div>
+            <div id="quest-dynamic-members" style="margin-top:1rem;"></div>
           </div>
 
-          <!-- Submit Action (No Rules Checkbox!) -->
+          <!-- Submit Action -->
           <div class="form-submit-row">
             <button type="button" class="btn-struct" id="submit-registration-btn">
               <span>REGISTER NOW</span>
@@ -644,7 +643,7 @@
         </form>
       </div>
 
-      <!-- 16. Minimal Success State (NO screenshot/print/download buttons) -->
+      <!-- Minimal Success State (NO screenshot/print/download buttons) -->
       <div class="reg-card-container success-dark-panel" id="success-state-panel">
         <span class="struct-tag" style="background:#10B981;color:#FFF;border-color:#10B981;margin-bottom:1rem;">
           REGISTRATION SUCCESSFUL
@@ -659,7 +658,7 @@
         </div>
 
         <p class="success-footer-note">
-          You can retrieve and inspect your registration credentials anytime using <strong>Check Registration</strong> below.
+          You can retrieve and inspect your registration details anytime using <strong>Check Registration</strong> below.
         </p>
       </div>
 
@@ -676,7 +675,7 @@
         <span class="struct-tag orange" style="margin-bottom:0.5rem;">VERIFICATION PORTAL</span>
         <h2 style="font-size: clamp(2rem, 4vw, 2.8rem);">CHECK REGISTRATION</h2>
         <p style="font-size:0.9rem;color:var(--text-secondary);margin-top:0.4rem;">
-          Enter your Unique Registration Code (e.g. <code>STR26-A8K4</code>) to inspect registration details.
+          Enter your Unique Registration Code (e.g. <code>STR26-XXXX</code>) to inspect registration details.
         </p>
       </div>
 
@@ -693,7 +692,7 @@
   </section>
 
   <!-- ===============================================================
-       21. LOCATION SECTION (CONTINUOUS FLOW • NO EVENT TIME/VENUE)
+       21. LOCATION SECTION (OFFICIAL AAMEC KOVILVENNI)
        =============================================================== -->
   <section class="location-section" id="location">
     <div class="container">
@@ -791,17 +790,23 @@
           <p class="org-sub-desc">Department of Civil Engineering</p>
         </div>
 
-        <!-- Staff Coordinators -->
+        <!-- Staff Coordinator 1 (Change 6) -->
         <div class="org-info-card">
-          <div class="org-role-lbl">Staff Coordinators</div>
-          <h3 class="org-name-text">1. Dr P. JAYARAJ  A/P</h3>
-          <h3 class="org-name-text" style="margin-top:0.35rem;">2. Mrs. S. P. AKSHAYA  A/P</h3>
+          <div class="org-role-lbl">Staff Coordinator 1</div>
+          <h3 class="org-name-text">Dr P. JAYARAJ A/P</h3>
+          <p class="org-sub-desc">Department of Civil Engineering</p>
+        </div>
+
+        <!-- Staff Coordinator 2 (Change 6) -->
+        <div class="org-info-card">
+          <div class="org-role-lbl">Staff Coordinator 2</div>
+          <h3 class="org-name-text">Mrs. S. P. AKSHAYA A/P</h3>
           <p class="org-sub-desc">Department of Civil Engineering</p>
         </div>
       </div>
 
       <!-- Student Coordinators & Technical Queries -->
-      <div class="section-hdr" style="margin-top:3rem;">
+      <div class="section-hdr" style="margin-top:3.5rem;">
         <div>
           <span class="struct-tag orange" style="margin-bottom:0.5rem;">COMMUNICATION DESK</span>
           <h2 style="font-size: clamp(2rem, 4vw, 2.8rem);">CONTACT US</h2>
@@ -811,7 +816,7 @@
       <div class="org-cards-row">
         <!-- Student Coordinator 1 -->
         <div class="org-info-card" style="border-left:4px solid var(--accent-orange);">
-          <div class="org-role-lbl">Student Coordinators</div>
+          <div class="org-role-lbl">Student Coordinator</div>
           <div class="org-contact-subcat">General Inquiries & Registration</div>
           <h3 class="org-name-text">Vijay Prasanna M</h3>
           <a href="tel:9025680773" class="contact-phone-link">
@@ -821,7 +826,7 @@
 
         <!-- Student Coordinator 2 -->
         <div class="org-info-card" style="border-left:4px solid var(--accent-orange);">
-          <div class="org-role-lbl">Student Coordinators</div>
+          <div class="org-role-lbl">Student Coordinator</div>
           <div class="org-contact-subcat">General Inquiries & Registration</div>
           <h3 class="org-name-text">Kirsha A</h3>
           <a href="tel:6382049984" class="contact-phone-link">
@@ -829,13 +834,30 @@
           </a>
         </div>
 
-        <!-- Technical Queries: Displayed in BLUE -->
-        <div class="org-info-card" style="border-left:4px solid var(--accent-blue);">
-          <div class="org-role-lbl" style="color:var(--accent-blue);">Technical Queries</div>
-          <div class="org-contact-subcat">Website & Portal Inquiries</div>
+        <!-- Technical Queries: Phone Number in ORANGE (Change 7) -->
+        <div class="org-info-card" style="border-left:4px solid var(--accent-orange);">
+          <div class="org-role-lbl text-orange">Technical Queries</div>
           <h3 class="org-name-text">NITHISHKANNAN K</h3>
-          <a href="tel:7604846082" class="contact-phone-blue">
+          <a href="tel:7604846082" class="contact-phone-orange">
             📞 7604846082
+          </a>
+        </div>
+
+        <!-- Official Email (Change 8) -->
+        <div class="org-info-card" style="border-left:4px solid var(--border-strong);">
+          <div class="org-role-lbl">Official Email</div>
+          <h3 class="org-name-text" style="font-size:1rem;word-break:break-all;">structuraaamec@gmail.com</h3>
+          <a href="mailto:structuraaamec@gmail.com" class="contact-phone-link" style="color:var(--accent-orange);margin-top:0.4rem;">
+            ✉️ Send Mail
+          </a>
+        </div>
+
+        <!-- Official Instagram (Change 8) -->
+        <div class="org-info-card" style="border-left:4px solid var(--border-strong);">
+          <div class="org-role-lbl">Official Instagram</div>
+          <h3 class="org-name-text">@structura_2k26</h3>
+          <a href="https://instagram.com/structura_2k26" target="_blank" rel="noopener noreferrer" class="contact-phone-link" style="color:var(--accent-orange);margin-top:0.4rem;">
+            📸 Follow on Instagram
           </a>
         </div>
       </div>
@@ -863,7 +885,7 @@
     </div>
   </footer>
 
-  <!-- Core JavaScript -->
+  <!-- Core JavaScript Engine -->
   <script src="js/app.js"></script>
 </body>
 </html>
