@@ -60,9 +60,10 @@ const EVENTS_DATA = {
       { lbl: 'BACKUP', val: 'PPTX + PDF Backup' },
       { lbl: 'DEADLINE', val: '07.10.2026' }
     ],
-    description: 'Present groundbreaking civil engineering research, sustainable materials innovation, and modern structural design concepts before our esteemed evaluation committee.',
+    description: 'Present groundbreaking civil engineering research, sustainable materials innovation, and modern structural design concepts before our esteemed evaluation committee. Total Duration: 10 minutes (Presentation: 8 minutes, Q&A: 2 minutes).',
     rules: [
       'Team Size: 1, 2, or 3 participants (Maximum 3).',
+      'Timing: Total Duration: 10 minutes (Presentation: 8 minutes | Q&A: 2 minutes).',
       'Number of Slides: 13–15 slides strictly.',
       'File Name Format: Topic Name_College Name (Submit PPTX + PDF backup).',
       'Fonts: Calibri or Times New Roman (Title: 28–36 pt | Heading: 24–30 pt | Body: 20–26 pt | References: 16–18 pt).',
@@ -84,12 +85,12 @@ const EVENTS_DATA = {
       { lbl: 'DURATION', val: '45 Minutes' },
       { lbl: 'TOPIC', val: 'Residential Building' }
     ],
-    description: 'Precision architectural drafting, structural plan detailing, sectional analysis, and elevation modeling under timed laboratory conditions.',
+    description: 'Precision architectural drafting, structural plan detailing, and elevation modeling under timed laboratory conditions.',
     rules: [
       'Software Platform: AutoCAD 2026.',
       'Format: Individual Event. 45 Minutes duration.',
       'Topic: Normal Residential Building / Residential Building.',
-      'Deliverables: Complete Plan, Elevation, and Sectional View.',
+      'Deliverables: Complete Plan and Elevation.',
       'Drafting Standards: Proper dimensions, accurate labels, margin/border, Participant name, layers, line types, line weights, and text sizes.',
       'File Name: CADD.2026 (Save periodically throughout the event).',
       'Lab Regulations: Systems allocated randomly. Inform lab coordinator immediately if a crash occurs. Report 10–15 minutes early. No extra time. Malpractice results in disqualification.'
@@ -132,7 +133,7 @@ const EVENTS_DATA = {
       'Prerequisite: Can only be selected when at least 1 Technical Event is selected.',
       'STAGE 1 — QUIZ BATTLE: General technical reasoning, visual recognition, and spatial logic.',
       'STAGE 2 — DIZE MISSION: Official challenge formats: Missing Number Matrix • Word Logic Challenge • Odd One Out • Target Tactics • Memory Matrix • Speed Circuit • Cup Code • Dead Cells.',
-      'STAGE 3 — TREASURE HUNT: 30 minutes duration; strict clue/checkpoint order; collect tokens; shortest valid completion time wins; no running/pushing/shouting; team members must stay together at all times; tampering/cheating results in disqualification; judges’ decisions are final.'
+      'STAGE 3 — TREASURE HUNT: Strict clue/checkpoint order; collect tokens; shortest valid completion time wins; no running/pushing/shouting; team members must stay together at all times; tampering/cheating results in disqualification; judges’ decisions are final.'
     ]
   }
 };
