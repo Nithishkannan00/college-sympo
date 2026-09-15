@@ -1,4 +1,5 @@
-# Bulletproof Static HTTP Server in PowerShell
+# Bulletproof Static HTTP Server in PowerShell with /api/register Proxy
+Add-Type -AssemblyName System.Net.Http
 $port = 3000
 $root = "c:\Users\Asus\Desktop\college-sympo"
 
@@ -32,6 +33,44 @@ while ($true) {
         $res = $context.Response
 
         $path = $req.Url.LocalPath
+        if ($path -eq "/api/register") {
+            $reqBody = ""
+            $len = $req.ContentLength64
+            if ($len -gt 0) {
+                $buf = New-Object byte[] $len
+                $readTotal = 0
+                while ($readTotal -lt $len) {
+                    $r = $req.InputStream.Read($buf, $readTotal, $len - $readTotal)
+                    if ($r -le 0) { break }
+                    $readTotal += $r
+                }
+                $reqBody = [System.Text.Encoding]::UTF8.GetString($buf, 0, $readTotal)
+            }
+            $gasUrl = "https://script.google.com/macros/s/AKfycbx1mmdlSF-gvkQ06--A0st5Hvl2gNV30FsaOaTWqXAhS35NDWh2tdIY2W0AhuliqZgy/exec"
+            try {
+                $handler = New-Object System.Net.Http.HttpClientHandler
+                $handler.AllowAutoRedirect = $true
+                $client = New-Object System.Net.Http.HttpClient($handler)
+                $httpContent = New-Object System.Net.Http.StringContent($reqBody, [System.Text.Encoding]::UTF8, "application/json")
+                $gasResp = $client.PostAsync($gasUrl, $httpContent).Result
+                $respText = $gasResp.Content.ReadAsStringAsync().Result
+                $respBytes = [System.Text.Encoding]::UTF8.GetBytes($respText)
+                $res.ContentType = "application/json; charset=utf-8"
+                $res.StatusCode = 200
+                $res.ContentLength64 = $respBytes.Length
+                $res.OutputStream.Write($respBytes, 0, $respBytes.Length)
+            } catch {
+                $errJson = "{`"success`":false,`"error`":`"$($_.Exception.Message)`"}"
+                $errBytes = [System.Text.Encoding]::UTF8.GetBytes($errJson)
+                $res.ContentType = "application/json; charset=utf-8"
+                $res.StatusCode = 502
+                $res.ContentLength64 = $errBytes.Length
+                $res.OutputStream.Write($errBytes, 0, $errBytes.Length)
+            }
+            $res.Close()
+            continue
+        }
+
         if ($path -eq "/" -or [string]::IsNullOrWhiteSpace($path)) {
             $path = "/index.html"
         }

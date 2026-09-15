@@ -28,7 +28,7 @@ module.exports = async (req, res) => {
     const gasResponse = await fetch(GAS_WEB_APP_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'text/plain;charset=utf-8'
+        'Content-Type': 'application/json'
       },
       body: payload,
       redirect: 'follow'

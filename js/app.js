@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* ===============================================================
    1A. HIGH-IMPACT ENTRY SCREEN 3D ARCHITECTURAL / STRUCTURAL CAD
-       Multi-Tier High-Rise Structural Wireframe & Blueprint Matrix
+       Multi-Tier High-Rise Tower, Warren Truss Bridge, Arch Geometry & Blueprint Matrix
    =============================================================== */
 function initEntryScreenCad(canvasId) {
   const canvas = document.getElementById(canvasId);
@@ -236,86 +236,222 @@ function initEntryScreenCad(canvasId) {
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Multi-tier 3D Structural High-Rise Tower & Cantilever Geometry
-  const buildingNodes = [];
-  const buildingEdges = [];
+  // -------------------------------------------------------------
+  // 1. PRIMARY STRUCTURE: 8-Tier Skyscraper Tower Wireframe
+  // -------------------------------------------------------------
+  const towerNodes = [];
+  const towerEdges = [];
+  const stories = 8;
+  const storyHeight = 48;
+  const baseWidth = 190;
+  const baseDepth = 190;
 
-  const stories = 7;
-  const storyHeight = 55;
-  const baseWidth = 180;
-  const baseDepth = 180;
-
-  // 1. Skyscraper Floor Tiers
   for (let s = 0; s <= stories; s++) {
     const y = (stories / 2 - s) * storyHeight;
-    // Taper slightly towards top
-    const taper = 1.0 - (s / (stories + 2)) * 0.45;
+    const taper = 1.0 - (s / (stories + 2)) * 0.42;
     const w = (baseWidth * taper) / 2;
     const d = (baseDepth * taper) / 2;
-
-    const baseIdx = buildingNodes.length;
+    const baseIdx = towerNodes.length;
 
     // 4 Corner Column Nodes
-    buildingNodes.push({ ox: -w, oy: y, oz: -d }); // 0: Top-Left
-    buildingNodes.push({ ox:  w, oy: y, oz: -d }); // 1: Top-Right
-    buildingNodes.push({ ox:  w, oy: y, oz:  d }); // 2: Bottom-Right
-    buildingNodes.push({ ox: -w, oy: y, oz:  d }); // 3: Bottom-Left
+    towerNodes.push({ ox: -w, oy: y, oz: -d }); // 0: Top-Left
+    towerNodes.push({ ox:  w, oy: y, oz: -d }); // 1: Top-Right
+    towerNodes.push({ ox:  w, oy: y, oz:  d }); // 2: Bottom-Right
+    towerNodes.push({ ox: -w, oy: y, oz:  d }); // 3: Bottom-Left
 
-    // Floor Perimeter Beams
-    buildingEdges.push([baseIdx + 0, baseIdx + 1, 'beam']);
-    buildingEdges.push([baseIdx + 1, baseIdx + 2, 'beam']);
-    buildingEdges.push([baseIdx + 2, baseIdx + 3, 'beam']);
-    buildingEdges.push([baseIdx + 3, baseIdx + 0, 'beam']);
+    // Floor Perimeter Ring Beams
+    towerEdges.push([baseIdx + 0, baseIdx + 1, 'beam']);
+    towerEdges.push([baseIdx + 1, baseIdx + 2, 'beam']);
+    towerEdges.push([baseIdx + 2, baseIdx + 3, 'beam']);
+    towerEdges.push([baseIdx + 3, baseIdx + 0, 'beam']);
 
-    // Interior Cross Girders
-    buildingEdges.push([baseIdx + 0, baseIdx + 2, 'interior']);
-    buildingEdges.push([baseIdx + 1, baseIdx + 3, 'interior']);
+    // Internal Floor Cross Girders
+    towerEdges.push([baseIdx + 0, baseIdx + 2, 'interior']);
+    towerEdges.push([baseIdx + 1, baseIdx + 3, 'interior']);
 
-    // Vertical Columns & X-Bracing connecting to previous story
+    // Cantilever Outrigger Balconies on Mid Floors (Stories 2, 4, 6)
+    if (s === 2 || s === 4 || s === 6) {
+      const outW = w * 1.25;
+      const outD = d * 1.25;
+      const outIdx = towerNodes.length;
+      towerNodes.push({ ox: -outW, oy: y, oz: -outD });
+      towerNodes.push({ ox:  outW, oy: y, oz: -outD });
+      towerNodes.push({ ox:  outW, oy: y, oz:  outD });
+      towerNodes.push({ ox: -outW, oy: y, oz:  outD });
+
+      towerEdges.push([outIdx + 0, outIdx + 1, 'beam']);
+      towerEdges.push([outIdx + 1, outIdx + 2, 'beam']);
+      towerEdges.push([outIdx + 2, outIdx + 3, 'beam']);
+      towerEdges.push([outIdx + 3, outIdx + 0, 'beam']);
+
+      // Ties to Core
+      for (let k = 0; k < 4; k++) {
+        towerEdges.push([baseIdx + k, outIdx + k, 'interior']);
+      }
+    }
+
+    // Vertical Columns & Diagrid Facade X-Bracing
     if (s > 0) {
       const prevIdx = baseIdx - 4;
       for (let c = 0; c < 4; c++) {
         const nextC = (c + 1) % 4;
-        // Vertical Column
-        buildingEdges.push([prevIdx + c, baseIdx + c, 'column']);
-        // Diagonal X-Braces on Facade
-        buildingEdges.push([prevIdx + c, baseIdx + nextC, 'brace']);
-        buildingEdges.push([prevIdx + nextC, baseIdx + c, 'brace']);
+        towerEdges.push([prevIdx + c, baseIdx + c, 'column']);
+        towerEdges.push([prevIdx + c, baseIdx + nextC, 'brace']);
+        towerEdges.push([prevIdx + nextC, baseIdx + c, 'brace']);
       }
     }
   }
 
-  // 2. Crown Architectural Spire on Top of Tower
-  const topCenterIdx = buildingNodes.length;
-  const topY = (stories / 2 - stories) * storyHeight - 90;
-  buildingNodes.push({ ox: 0, oy: topY, oz: 0 });
+  // Crown Spire & Antenna Apex
+  const topCenterIdx = towerNodes.length;
+  const topY = (stories / 2 - stories) * storyHeight - 95;
+  towerNodes.push({ ox: 0, oy: topY, oz: 0 });
 
   const lastStoryBase = (stories) * 4;
   for (let c = 0; c < 4; c++) {
-    buildingEdges.push([lastStoryBase + c, topCenterIdx, 'spire']);
+    towerEdges.push([lastStoryBase + c, topCenterIdx, 'spire']);
   }
 
-  // 3. Floating Engineering Dimension Annotation Lines
+  // -------------------------------------------------------------
+  // 2. SECONDARY STRUCTURE: 3D Warren Truss Bridge Span (Background)
+  // -------------------------------------------------------------
+  const bridgeNodes = [];
+  const bridgeEdges = [];
+  const bridgeBays = 8;
+  const bayWidth = 65;
+  const bridgeHeight = 55;
+  const bridgeDepth = 70;
+  const startX = -((bridgeBays * bayWidth) / 2);
+  const bridgeBaseY = 160;
+
+  for (let b = 0; b <= bridgeBays; b++) {
+    const bx = startX + b * bayWidth;
+    const bIdx = bridgeNodes.length;
+
+    // Bottom Chord Nodes (Front & Back)
+    bridgeNodes.push({ ox: bx, oy: bridgeBaseY, oz: -bridgeDepth / 2 });
+    bridgeNodes.push({ ox: bx, oy: bridgeBaseY, oz:  bridgeDepth / 2 });
+
+    // Top Chord Nodes (Front & Back)
+    bridgeNodes.push({ ox: bx, oy: bridgeBaseY - bridgeHeight, oz: -bridgeDepth / 2 });
+    bridgeNodes.push({ ox: bx, oy: bridgeBaseY - bridgeHeight, oz:  bridgeDepth / 2 });
+
+    // Vertical Posts (Front & Back)
+    bridgeEdges.push([bIdx + 0, bIdx + 2, 'bridge-post']);
+    bridgeEdges.push([bIdx + 1, bIdx + 3, 'bridge-post']);
+
+    // Deck Transverse Crossbeams
+    bridgeEdges.push([bIdx + 0, bIdx + 1, 'bridge-beam']);
+    bridgeEdges.push([bIdx + 2, bIdx + 3, 'bridge-beam']);
+
+    if (b > 0) {
+      const prevB = bIdx - 4;
+      // Bottom & Top Chords
+      bridgeEdges.push([prevB + 0, bIdx + 0, 'bridge-chord']);
+      bridgeEdges.push([prevB + 1, bIdx + 1, 'bridge-chord']);
+      bridgeEdges.push([prevB + 2, bIdx + 2, 'bridge-chord']);
+      bridgeEdges.push([prevB + 3, bIdx + 3, 'bridge-chord']);
+
+      // Alternating Warren Truss Diagonals
+      if (b % 2 === 1) {
+        bridgeEdges.push([prevB + 0, bIdx + 2, 'bridge-diag']);
+        bridgeEdges.push([prevB + 1, bIdx + 3, 'bridge-diag']);
+      } else {
+        bridgeEdges.push([prevB + 2, bIdx + 0, 'bridge-diag']);
+        bridgeEdges.push([prevB + 3, bIdx + 1, 'bridge-diag']);
+      }
+    }
+  }
+
+  // -------------------------------------------------------------
+  // 3. TERTIARY STRUCTURE: Parabolic Arch Rib (Deep Background)
+  // -------------------------------------------------------------
+  const archNodes = [];
+  const archEdges = [];
+  const archSegments = 14;
+  const archSpan = 520;
+  const archRise = 190;
+  const archBaseY = 190;
+
+  for (let i = 0; i <= archSegments; i++) {
+    const t = (i / archSegments) * 2 - 1; // -1 to +1
+    const ax = t * (archSpan / 2);
+    const ay = archBaseY - (1 - t * t) * archRise;
+    const aIdx = archNodes.length;
+
+    archNodes.push({ ox: ax, oy: ay, oz: -120 });
+    archNodes.push({ ox: ax, oy: ay + 20, oz: -120 }); // Lower parallel rib
+
+    archEdges.push([aIdx + 0, aIdx + 1, 'arch-web']);
+
+    if (i > 0) {
+      const prevA = aIdx - 2;
+      archEdges.push([prevA + 0, aIdx + 0, 'arch-rib']);
+      archEdges.push([prevA + 1, aIdx + 1, 'arch-rib']);
+      archEdges.push([prevA + 0, aIdx + 1, 'arch-diag']);
+    }
+  }
+
+  // -------------------------------------------------------------
+  // 4. CAD Technical Dimension Markers & Datum Annotations
+  // -------------------------------------------------------------
   const dimensionMarkers = [
-    { xRatio: 0.15, yRatio: 0.25, len: 140, label: 'ELEV: +145.00m' },
-    { xRatio: 0.82, yRatio: 0.65, len: 160, label: 'GRID-AXIS: C-04' },
-    { xRatio: 0.22, yRatio: 0.78, len: 120, label: 'SPAN: 42.50m' }
+    { xRatio: 0.12, yRatio: 0.22, len: 160, label: 'ELEV: +185.00m (SP-01)' },
+    { xRatio: 0.82, yRatio: 0.28, len: 140, label: 'GRID-AXIS: C-04 [STEEL]' },
+    { xRatio: 0.14, yRatio: 0.76, len: 170, label: 'SPAN: 48.50m (WARREN TRUSS)' },
+    { xRatio: 0.78, yRatio: 0.72, len: 150, label: 'DESIGN LOAD: 350 kN/m²' },
+    { xRatio: 0.46, yRatio: 0.14, len: 120, label: 'SECTION A-A: MOMENT FRAME' }
   ];
 
-  // 4. Floating Ambient Technical CAD Particles
+  // -------------------------------------------------------------
+  // 5. Floating Ambient CAD Technical Nodes & Particles
+  // -------------------------------------------------------------
   const particles = [];
-  const particleCount = 28;
+  const particleCount = 36;
   for (let i = 0; i < particleCount; i++) {
     particles.push({
-      x: Math.random() * 1200,
-      y: Math.random() * 800,
-      vx: (Math.random() - 0.5) * 0.35,
-      vy: -0.2 - Math.random() * 0.4,
-      size: 1 + Math.random() * 2,
-      alpha: 0.2 + Math.random() * 0.5
+      x: Math.random() * 1400,
+      y: Math.random() * 900,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: -0.25 - Math.random() * 0.45,
+      size: 1 + Math.random() * 2.2,
+      alpha: 0.25 + Math.random() * 0.55
     });
   }
 
+  // -------------------------------------------------------------
+  // 6. 3D Rotation & Projection Matrix Helper
+  // -------------------------------------------------------------
+  function project3D(nodes, rX, rY, rZ, centerX, centerY, centerZ, fovVal) {
+    const cosY = Math.cos(rY), sinY = Math.sin(rY);
+    const cosX = Math.cos(rX), sinX = Math.sin(rX);
+    const cosZ = Math.cos(rZ), sinZ = Math.sin(rZ);
+
+    return nodes.map(n => {
+      // Y Rotation
+      let x1 = n.ox * cosY - n.oz * sinY;
+      let z1 = n.ox * sinY + n.oz * cosY;
+      // X Rotation
+      let y1 = n.oy * cosX - z1 * sinX;
+      let z2 = n.oy * sinX + z1 * cosX;
+      // Z Rotation
+      let x2 = x1 * cosZ - y1 * sinZ;
+      let y2 = x1 * sinZ + y1 * cosZ;
+      let z3 = z2 + centerZ;
+
+      const scale = fovVal / Math.max(120, z3);
+      return {
+        px: centerX + x2 * scale,
+        py: centerY + y2 * scale,
+        scale: scale,
+        z: z3
+      };
+    });
+  }
+
+  // -------------------------------------------------------------
+  // 7. Master Render Loop
+  // -------------------------------------------------------------
   function render() {
     ctx.clearRect(0, 0, width, height);
 
@@ -323,51 +459,118 @@ function initEntryScreenCad(canvasId) {
 
     if (!prefersReducedMotion) {
       rotY += 0.0035;
-      rotX = 0.22 + Math.sin(time * 0.4) * 0.06;
-      rotZ = Math.sin(time * 0.25) * 0.03;
+      rotX = 0.20 + Math.sin(time * 0.35) * 0.05;
+      rotZ = Math.sin(time * 0.22) * 0.025;
     }
 
-    // A. Background Blueprint Coordinate Grid
-    const gridSize = 55;
-    const gridOffset = (time * 5) % gridSize;
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.035)';
-    ctx.lineWidth = 1;
+    // A. Multi-Scale Background Blueprint Drafting Grid
+    const gridSizeMajor = 75;
+    const gridSizeMinor = 25;
+    const gridOffsetMajor = (time * 4) % gridSizeMajor;
+    const gridOffsetMinor = (time * 4) % gridSizeMinor;
 
-    for (let x = gridOffset; x < width; x += gridSize) {
+    // Minor Grid Lines
+    ctx.strokeStyle = 'rgba(0, 163, 255, 0.03)';
+    ctx.lineWidth = 0.75;
+    for (let x = gridOffsetMinor; x < width; x += gridSizeMinor) {
       ctx.beginPath();
       ctx.moveTo(x, 0); ctx.lineTo(x, height);
       ctx.stroke();
     }
-    for (let y = gridOffset; y < height; y += gridSize) {
+    for (let y = gridOffsetMinor; y < height; y += gridSizeMinor) {
       ctx.beginPath();
       ctx.moveTo(0, y); ctx.lineTo(width, y);
       ctx.stroke();
     }
 
-    // Grid Intersections Crosshairs
-    ctx.fillStyle = 'rgba(255, 85, 0, 0.25)';
-    for (let x = gridOffset; x < width; x += gridSize * 3) {
-      for (let y = gridOffset; y < height; y += gridSize * 3) {
-        ctx.fillRect(x - 3, y - 0.5, 7, 1);
-        ctx.fillRect(x - 0.5, y - 3, 1, 7);
-      }
-    }
-
-    // B. Receding Isometric Perspective Floor Grid (Civil Ground Datum Plane)
-    ctx.strokeStyle = 'rgba(0, 163, 255, 0.05)';
-    const groundY = height * 0.78;
-    for (let i = -12; i <= 12; i++) {
+    // Major Grid Lines
+    ctx.strokeStyle = 'rgba(0, 163, 255, 0.07)';
+    ctx.lineWidth = 1;
+    for (let x = gridOffsetMajor; x < width; x += gridSizeMajor) {
       ctx.beginPath();
-      ctx.moveTo(width * 0.5 + i * 25, groundY - 120);
-      ctx.lineTo(width * 0.5 + i * 110, height);
+      ctx.moveTo(x, 0); ctx.lineTo(x, height);
+      ctx.stroke();
+    }
+    for (let y = gridOffsetMajor; y < height; y += gridSizeMajor) {
+      ctx.beginPath();
+      ctx.moveTo(0, y); ctx.lineTo(width, y);
       ctx.stroke();
     }
 
-    // C. Technical Dimensions & Construction Markers
+    // Major Grid Intersection Crosshairs
+    ctx.fillStyle = 'rgba(255, 85, 0, 0.35)';
+    for (let x = gridOffsetMajor; x < width; x += gridSizeMajor * 2) {
+      for (let y = gridOffsetMajor; y < height; y += gridSizeMajor * 2) {
+        ctx.fillRect(x - 3.5, y - 0.5, 8, 1);
+        ctx.fillRect(x - 0.5, y - 3.5, 1, 8);
+      }
+    }
+
+    // B. Receding Isometric Ground Datum Plane
+    ctx.strokeStyle = 'rgba(0, 163, 255, 0.07)';
+    ctx.lineWidth = 1;
+    const groundY = height * 0.78;
+    for (let i = -16; i <= 16; i++) {
+      ctx.beginPath();
+      ctx.moveTo(width * 0.5 + i * 28, groundY - 140);
+      ctx.lineTo(width * 0.5 + i * 125, height);
+      ctx.stroke();
+    }
+
+    // Horizontal Ground Elevation Ticks
+    for (let d = 0; d < 6; d++) {
+      const dy = groundY - 140 + (d / 5) * (height - (groundY - 140));
+      ctx.beginPath();
+      ctx.moveTo(width * 0.08, dy);
+      ctx.lineTo(width * 0.92, dy);
+      ctx.stroke();
+    }
+
+    // C. Drafting Compass Geometric Construction Guide Arcs
+    const compassX = width * 0.85;
+    const compassY = height * 0.25;
+    ctx.strokeStyle = 'rgba(0, 163, 255, 0.08)';
+    ctx.setLineDash([4, 6]);
+    ctx.beginPath();
+    ctx.arc(compassX, compassY, 90, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(compassX, compassY, 140, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Compass Center Crosshair & Degree Ticks
+    ctx.strokeStyle = 'rgba(255, 85, 0, 0.35)';
+    ctx.beginPath();
+    ctx.moveTo(compassX - 15, compassY); ctx.lineTo(compassX + 15, compassY);
+    ctx.moveTo(compassX, compassY - 15); ctx.lineTo(compassX, compassY + 15);
+    ctx.stroke();
+    ctx.font = '8px "JetBrains Mono", monospace';
+    ctx.fillStyle = 'rgba(0, 163, 255, 0.35)';
+    ctx.fillText('CAD-REF: 00° N', compassX - 28, compassY - 22);
+
+    // Architectural Scale Bar (Bottom Left)
+    const scaleX = 35;
+    const scaleY = height - 28;
+    ctx.strokeStyle = 'rgba(0, 163, 255, 0.35)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(scaleX, scaleY);
+    ctx.lineTo(scaleX + 120, scaleY);
+    ctx.moveTo(scaleX, scaleY - 4); ctx.lineTo(scaleX, scaleY + 4);
+    ctx.moveTo(scaleX + 40, scaleY - 3); ctx.lineTo(scaleX + 40, scaleY + 3);
+    ctx.moveTo(scaleX + 80, scaleY - 3); ctx.lineTo(scaleX + 80, scaleY + 3);
+    ctx.moveTo(scaleX + 120, scaleY - 4); ctx.lineTo(scaleX + 120, scaleY + 4);
+    ctx.stroke();
+    ctx.font = '8px "JetBrains Mono", monospace';
+    ctx.fillStyle = 'rgba(0, 163, 255, 0.40)';
+    ctx.fillText('0    5m   10m  15m', scaleX + 2, scaleY - 6);
+
+    // D. Technical Dimensions & Construction Markers
     dimensionMarkers.forEach(dm => {
       const px = width * dm.xRatio;
       const py = height * dm.yRatio;
-      ctx.strokeStyle = 'rgba(0, 163, 255, 0.18)';
+      ctx.strokeStyle = 'rgba(0, 163, 255, 0.22)';
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(px, py); ctx.lineTo(px + dm.len, py);
@@ -380,57 +583,67 @@ function initEntryScreenCad(canvasId) {
       ctx.stroke();
 
       ctx.font = '9px "JetBrains Mono", monospace';
-      ctx.fillStyle = 'rgba(0, 163, 255, 0.28)';
-      ctx.fillText(dm.label, px + 8, py - 6);
+      ctx.fillStyle = 'rgba(0, 163, 255, 0.38)';
+      ctx.fillText(dm.label, px + 6, py - 6);
     });
 
-    // D. 3D Skyscraper Wireframe Projection & Rendering
-    const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
-    const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
-    const cosZ = Math.cos(rotZ), sinZ = Math.sin(rotZ);
-
-    const fov = 520;
-    const centerX = width * 0.5;
-    const centerY = height * 0.48;
-
-    const projected = buildingNodes.map(n => {
-      // Y Rotation
-      let x1 = n.ox * cosY - n.oz * sinY;
-      let z1 = n.ox * sinY + n.oz * cosY;
-      // X Rotation
-      let y1 = n.oy * cosX - z1 * sinX;
-      let z2 = n.oy * sinX + z1 * cosX;
-      // Z Rotation
-      let x2 = x1 * cosZ - y1 * sinZ;
-      let y2 = x1 * sinZ + y1 * cosZ;
-      let z3 = z2 + 620;
-
-      const scale = fov / z3;
-      return {
-        px: centerX + x2 * scale,
-        py: centerY + y2 * scale,
-        scale: scale,
-        z: z3
-      };
+    // ---------------------------------------------------------
+    // E. 3D STRUCTURAL LAYER 1: Parabolic Arch (Deep Layer)
+    // ---------------------------------------------------------
+    const archProj = project3D(archNodes, rotX * 0.5, rotY * 0.4, 0, width * 0.5, height * 0.52, 700, 480);
+    archEdges.forEach(([i, j, type]) => {
+      const p1 = archProj[i], p2 = archProj[j];
+      ctx.strokeStyle = type === 'arch-rib' ? 'rgba(0, 163, 255, 0.18)' : 'rgba(255, 85, 0, 0.14)';
+      ctx.lineWidth = type === 'arch-rib' ? 1.2 : 0.75;
+      ctx.beginPath();
+      ctx.moveTo(p1.px, p1.py);
+      ctx.lineTo(p2.px, p2.py);
+      ctx.stroke();
     });
 
-    // Draw Wireframe Edges
-    buildingEdges.forEach(([i, j, type]) => {
-      const p1 = projected[i];
-      const p2 = projected[j];
+    // ---------------------------------------------------------
+    // F. 3D STRUCTURAL LAYER 2: Warren Truss Bridge (Mid Layer)
+    // ---------------------------------------------------------
+    const bridgeProj = project3D(bridgeNodes, rotX * 0.75, rotY * 0.65 + 0.5, rotZ * 0.5, width * 0.5, height * 0.62, 620, 520);
+    bridgeEdges.forEach(([i, j, type]) => {
+      const p1 = bridgeProj[i], p2 = bridgeProj[j];
+      if (type === 'bridge-chord') {
+        ctx.strokeStyle = 'rgba(0, 163, 255, 0.32)';
+        ctx.lineWidth = 1.4;
+      } else if (type === 'bridge-diag') {
+        ctx.strokeStyle = 'rgba(255, 85, 0, 0.28)';
+        ctx.lineWidth = 1.0;
+      } else {
+        ctx.strokeStyle = 'rgba(0, 163, 255, 0.20)';
+        ctx.lineWidth = 0.9;
+      }
+      ctx.beginPath();
+      ctx.moveTo(p1.px, p1.py);
+      ctx.lineTo(p2.px, p2.py);
+      ctx.stroke();
+    });
+
+    // ---------------------------------------------------------
+    // G. 3D STRUCTURAL LAYER 3: Skyscraper Tower (Foreground Core)
+    // ---------------------------------------------------------
+    const towerProj = project3D(towerNodes, rotX, rotY, rotZ, width * 0.5, height * 0.48, 580, 540);
+
+    // Draw Tower Wireframe Edges
+    towerEdges.forEach(([i, j, type]) => {
+      const p1 = towerProj[i], p2 = towerProj[j];
 
       if (type === 'column' || type === 'spire') {
-        ctx.strokeStyle = 'rgba(0, 163, 255, 0.42)';
-        ctx.lineWidth = 1.6;
+        ctx.strokeStyle = 'rgba(0, 163, 255, 0.46)';
+        ctx.lineWidth = 1.75;
       } else if (type === 'brace') {
-        ctx.strokeStyle = 'rgba(255, 85, 0, 0.38)';
-        ctx.lineWidth = 1.1;
+        ctx.strokeStyle = 'rgba(255, 85, 0, 0.40)';
+        ctx.lineWidth = 1.2;
       } else if (type === 'beam') {
-        ctx.strokeStyle = 'rgba(0, 163, 255, 0.32)';
-        ctx.lineWidth = 1.3;
+        ctx.strokeStyle = 'rgba(0, 163, 255, 0.36)';
+        ctx.lineWidth = 1.35;
       } else {
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
-        ctx.lineWidth = 0.8;
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)';
+        ctx.lineWidth = 0.85;
       }
 
       ctx.beginPath();
@@ -439,21 +652,39 @@ function initEntryScreenCad(canvasId) {
       ctx.stroke();
     });
 
-    // Draw Joint Connection Rivets & Nodes
-    projected.forEach(p => {
+    // Dynamic Traveling Light Sweep on Structural Columns (Orange Engineering Highlights)
+    const pulseStory = Math.floor((time * 2.5) % (stories + 1));
+    const pulseBase = pulseStory * 4;
+    for (let c = 0; c < 4; c++) {
+      if (pulseBase + c < towerProj.length) {
+        const p = towerProj[pulseBase + c];
+        ctx.fillStyle = '#FF5500';
+        ctx.beginPath();
+        ctx.arc(p.px, p.py, Math.max(2.8, p.scale * 4.8), 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = 'rgba(255, 85, 0, 0.35)';
+        ctx.beginPath();
+        ctx.arc(p.px, p.py, Math.max(6.0, p.scale * 9.5), 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Draw Joint Connection Rivets & Structural Nodes
+    towerProj.forEach(p => {
       ctx.fillStyle = '#FF5500';
       ctx.beginPath();
       ctx.arc(p.px, p.py, Math.max(1.8, p.scale * 3.2), 0, Math.PI * 2);
       ctx.fill();
 
       // Ambient Node Glow
-      ctx.fillStyle = 'rgba(255, 85, 0, 0.22)';
+      ctx.fillStyle = 'rgba(255, 85, 0, 0.18)';
       ctx.beginPath();
-      ctx.arc(p.px, p.py, Math.max(3.5, p.scale * 6.5), 0, Math.PI * 2);
+      ctx.arc(p.px, p.py, Math.max(3.5, p.scale * 6.2), 0, Math.PI * 2);
       ctx.fill();
     });
 
-    // E. Floating Ambient Technical Particles
+    // H. Floating Ambient Technical CAD Particles
     particles.forEach(pt => {
       pt.x += pt.vx;
       pt.y += pt.vy;
@@ -461,20 +692,22 @@ function initEntryScreenCad(canvasId) {
       if (pt.x < -20) pt.x = width + 20;
       if (pt.x > width + 20) pt.x = -20;
 
-      ctx.fillStyle = `rgba(255, 85, 0, ${pt.alpha * 0.4})`;
+      ctx.fillStyle = `rgba(255, 85, 0, ${pt.alpha * 0.45})`;
       ctx.beginPath();
       ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
       ctx.fill();
     });
 
-    // F. Horizontal Blueprint Laser Sweep
-    const laserY = (time * 50) % height;
-    const laserGrad = ctx.createLinearGradient(0, laserY, width, laserY);
-    laserGrad.addColorStop(0, 'rgba(0, 163, 255, 0)');
-    laserGrad.addColorStop(0.5, 'rgba(0, 163, 255, 0.12)');
-    laserGrad.addColorStop(1, 'rgba(0, 163, 255, 0)');
-    ctx.fillStyle = laserGrad;
-    ctx.fillRect(0, laserY - 1, width, 2);
+    // I. Smooth Horizontal & Diagonal Engineering Light Sweeps
+    const sweepY = (time * 45) % height;
+    const sweepGrad = ctx.createLinearGradient(0, sweepY, width, sweepY);
+    sweepGrad.addColorStop(0, 'rgba(0, 163, 255, 0)');
+    sweepGrad.addColorStop(0.3, 'rgba(0, 163, 255, 0.08)');
+    sweepGrad.addColorStop(0.5, 'rgba(255, 85, 0, 0.14)');
+    sweepGrad.addColorStop(0.7, 'rgba(0, 163, 255, 0.08)');
+    sweepGrad.addColorStop(1, 'rgba(0, 163, 255, 0)');
+    ctx.fillStyle = sweepGrad;
+    ctx.fillRect(0, sweepY - 1, width, 2.5);
 
     requestAnimationFrame(render);
   }
