@@ -1717,74 +1717,72 @@ function initCheckRegistrationPortal() {
       match = localRecords.find(r => r.registrationCode && r.registrationCode.toUpperCase() === raw);
     }
 
-    setTimeout(() => {
-      btn.innerText = 'VERIFY CODE';
-      btn.disabled = false;
+    btn.innerText = 'VERIFY CODE';
+    btn.disabled = false;
 
-      if (!match) {
-        resultPane.innerHTML = `
-          <div style="background:rgba(239, 68, 68, 0.12);border:1px solid #EF4444;padding:1.75rem;text-align:center;">
-            <p style="font-family:var(--font-mono);font-weight:800;color:#F87171;font-size:1rem;">
-              ✕ REGISTRATION NOT FOUND
-            </p>
-            <p style="font-size:0.85rem;color:#FCA5A5;margin-top:0.35rem;">
-              No active delegate record matches code <strong>${esc(raw)}</strong>. Please verify your code.
-            </p>
-          </div>
-        `;
-        resultPane.classList.add('show');
-        return;
-      }
-
-      function parseOrFormatMember(mem, defaultLabel) {
-        if (!mem) return '';
-        if (typeof mem === 'string') {
-          return `<div><strong>${defaultLabel}:</strong> ${esc(mem)}</div>`;
-        }
-        let label = `<strong>${defaultLabel}:</strong> ${esc(mem.fullName || mem.name || 'Delegate')}`;
-        if (mem.mobile || mem.phone) label += ` (+91 ${esc(mem.mobile || mem.phone)})`;
-        if (mem.email) label += ` &bull; ${esc(mem.email)}`;
-        return `<div>${label}</div>`;
-      }
-
-      let membersListHtml = parseOrFormatMember(match.member1, 'Member 1 (Lead)');
-      if (match.member2) {
-        membersListHtml += `<div style="margin-top:0.35rem;">${parseOrFormatMember(match.member2, 'Member 2')}</div>`;
-      }
-      if (match.member3) {
-        membersListHtml += `<div style="margin-top:0.35rem;">${parseOrFormatMember(match.member3, 'Member 3')}</div>`;
-      }
-
-      const m1 = typeof match.member1 === 'object' && match.member1 ? match.member1 : {};
-      const leadName = m1.fullName || m1.name || (typeof match.member1 === 'string' ? match.member1.split('|')[0].replace('Name:', '').trim() : 'Delegate');
-      const leadCollege = m1.collegeName || m1.college || '';
-      const leadDept = m1.department || m1.dept || '';
-      const leadYear = m1.year || '';
-
+    if (!match) {
       resultPane.innerHTML = `
-        <div style="background:var(--bg-surface);border:1px solid var(--border-medium);padding:2rem;box-shadow:0 15px 35px rgba(0,0,0,0.4);">
-          <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border-subtle);padding-bottom:1rem;margin-bottom:1.5rem;flex-wrap:wrap;gap:0.75rem;">
-            <div>
-              <span class="struct-tag orange" style="font-size:0.85rem;">${esc(match.registrationCode || raw)}</span>
-              <span class="struct-tag" style="background:#10B981;color:#FFF;border-color:#10B981;margin-left:0.5rem;">ACTIVE & VERIFIED</span>
-              <h3 style="font-size:1.4rem;font-weight:800;margin-top:0.5rem;">${esc(leadName)}</h3>
-            </div>
-          </div>
-
-          <table class="manifest-table-dark">
-            ${leadCollege ? `<tr><th>College</th><td>${esc(leadCollege)}</td></tr>` : ''}
-            ${leadDept || leadYear ? `<tr><th>Department & Year</th><td>${esc(leadDept)} ${leadYear ? `&bull; ${esc(leadYear)} Year` : ''}</td></tr>` : ''}
-            <tr><th>Selected Events</th><td><span class="struct-tag orange">${esc(match.events || (match.technicalEvents ? match.technicalEvents.join(', ') : (match.techEvents ? match.techEvents.join(', ') : '')))}</span></td></tr>
-            ${match.teamName ? `<tr><th>Team Name</th><td><strong>${esc(match.teamName)}</strong></td></tr>` : ''}
-            ${match.pptTopic ? `<tr><th>PPT Topic</th><td><em>${esc(match.pptTopic)}</em></td></tr>` : ''}
-            <tr><th>Participants</th><td>${membersListHtml}</td></tr>
-            <tr><th>Registration Date</th><td>${esc(match.registrationDate || match.timestamp || '')}</td></tr>
-          </table>
+        <div style="background:rgba(239, 68, 68, 0.12);border:1px solid #EF4444;padding:1.75rem;text-align:center;">
+          <p style="font-family:var(--font-mono);font-weight:800;color:#F87171;font-size:1rem;">
+            ✕ REGISTRATION NOT FOUND
+          </p>
+          <p style="font-size:0.85rem;color:#FCA5A5;margin-top:0.35rem;">
+            No active delegate record matches code <strong>${esc(raw)}</strong>. Please verify your code.
+          </p>
         </div>
       `;
       resultPane.classList.add('show');
-      resultPane.scrollIntoView({ behavior: 'smooth' });
-    }, 200);
+      return;
+    }
+
+    function parseOrFormatMember(mem, defaultLabel) {
+      if (!mem) return '';
+      if (typeof mem === 'string') {
+        return `<div><strong>${defaultLabel}:</strong> ${esc(mem)}</div>`;
+      }
+      let label = `<strong>${defaultLabel}:</strong> ${esc(mem.fullName || mem.name || 'Delegate')}`;
+      if (mem.mobile || mem.phone) label += ` (+91 ${esc(mem.mobile || mem.phone)})`;
+      if (mem.email) label += ` &bull; ${esc(mem.email)}`;
+      return `<div>${label}</div>`;
+    }
+
+    let membersListHtml = parseOrFormatMember(match.member1, 'Member 1 (Lead)');
+    if (match.member2) {
+      membersListHtml += `<div style="margin-top:0.35rem;">${parseOrFormatMember(match.member2, 'Member 2')}</div>`;
+    }
+    if (match.member3) {
+      membersListHtml += `<div style="margin-top:0.35rem;">${parseOrFormatMember(match.member3, 'Member 3')}</div>`;
+    }
+
+    const m1 = typeof match.member1 === 'object' && match.member1 ? match.member1 : {};
+    const leadName = m1.fullName || m1.name || (typeof match.member1 === 'string' ? match.member1.split('|')[0].replace('Name:', '').trim() : 'Delegate');
+    const leadCollege = m1.collegeName || m1.college || '';
+    const leadDept = m1.department || m1.dept || '';
+    const leadYear = m1.year || '';
+
+    resultPane.innerHTML = `
+      <div style="background:var(--bg-surface);border:1px solid var(--border-medium);padding:2rem;box-shadow:0 15px 35px rgba(0,0,0,0.4);">
+        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border-subtle);padding-bottom:1rem;margin-bottom:1.5rem;flex-wrap:wrap;gap:0.75rem;">
+          <div>
+            <span class="struct-tag orange" style="font-size:0.85rem;">${esc(match.registrationCode || raw)}</span>
+            <span class="struct-tag" style="background:#10B981;color:#FFF;border-color:#10B981;margin-left:0.5rem;">ACTIVE & VERIFIED</span>
+            <h3 style="font-size:1.4rem;font-weight:800;margin-top:0.5rem;">${esc(leadName)}</h3>
+          </div>
+        </div>
+
+        <table class="manifest-table-dark">
+          ${leadCollege ? `<tr><th>College</th><td>${esc(leadCollege)}</td></tr>` : ''}
+          ${leadDept || leadYear ? `<tr><th>Department & Year</th><td>${esc(leadDept)} ${leadYear ? `&bull; ${esc(leadYear)} Year` : ''}</td></tr>` : ''}
+          <tr><th>Selected Events</th><td><span class="struct-tag orange">${esc(match.events || (match.technicalEvents ? match.technicalEvents.join(', ') : (match.techEvents ? match.techEvents.join(', ') : '')))}</span></td></tr>
+          ${match.teamName ? `<tr><th>Team Name</th><td><strong>${esc(match.teamName)}</strong></td></tr>` : ''}
+          ${match.pptTopic ? `<tr><th>PPT Topic</th><td><em>${esc(match.pptTopic)}</em></td></tr>` : ''}
+          <tr><th>Participants</th><td>${membersListHtml}</td></tr>
+          <tr><th>Registration Date</th><td>${esc(match.registrationDate || match.timestamp || '')}</td></tr>
+        </table>
+      </div>
+    `;
+    resultPane.classList.add('show');
+    resultPane.scrollIntoView({ behavior: 'smooth' });
   });
 }
 
