@@ -6,8 +6,8 @@
  */
 
 const CONFIG = {
-  // Deployed Google Apps Script Web App Endpoint
-  GAS_WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbx1mmdlSF-gvkQ06--A0st5Hvl2gNV30FsaOaTWqXAhS35NDWh2tdIY2W0AhuliqZgy/exec',
+  // Server-Side Vercel API Proxy Endpoint
+  API_URL: '/api/register',
   MAX_ACTIVE_REGISTRATIONS: 30,
   HOST_COLLEGE_CODE: '8204',
   SYMPOSIUM_DATE_ISO: '2026-10-10T09:00:00+05:30',
@@ -1364,21 +1364,20 @@ function initRegistrationEngine() {
     };
 
     try {
-      if (!CONFIG.GAS_WEB_APP_URL) {
-        alert('Registration Web App URL is not configured.');
+      if (!CONFIG.API_URL) {
+        alert('Registration API endpoint is not configured.');
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalBtnContent;
         return;
       }
 
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 15000);
+      const timeoutId = setTimeout(() => controller.abort(), 20000);
 
-      const resp = await fetch(CONFIG.GAS_WEB_APP_URL, {
+      const resp = await fetch(CONFIG.API_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
-        redirect: 'follow',
         signal: controller.signal
       });
       clearTimeout(timeoutId);
@@ -1458,17 +1457,16 @@ function initCheckRegistrationPortal() {
 
     let match = null;
 
-    // 1. Attempt live fetch from Google Apps Script Web App
-    if (CONFIG.GAS_WEB_APP_URL) {
+    // 1. Attempt live fetch from server API proxy
+    if (CONFIG.API_URL) {
       try {
-        const resp = await fetch(CONFIG.GAS_WEB_APP_URL, {
+        const resp = await fetch(CONFIG.API_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             action: 'checkRegistration',
             registrationCode: raw
-          }),
-          redirect: 'follow'
+          })
         });
         const json = await resp.json();
         if (json && json.success && json.registration) {
