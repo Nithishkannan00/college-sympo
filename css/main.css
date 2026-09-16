@@ -327,6 +327,7 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.02em;
   color: var(--text-primary);
   line-height: 1.1;
+  white-space: nowrap;
 }
 
 .dept-sub-text {
@@ -516,19 +517,26 @@ h1, h2, h3, h4, h5, h6 {
   gap: 1.4rem;
 }
 
-/* Change 4: Reduced slightly to fit completely without clipping or overflow */
 .hero-main-h1 {
   font-family: var(--font-display);
   font-size: clamp(2.3rem, 6.5vw, 4.3rem);
   font-weight: 900;
   letter-spacing: 0;
   line-height: 1.05;
-  word-break: break-word;
+  white-space: nowrap;
   max-width: 100%;
   width: 100%;
   text-align: center;
   margin: 0 auto;
   display: block;
+}
+
+@media (max-width: 767px) {
+  .hero-main-h1 {
+    font-size: clamp(1.45rem, 7.5vw, 2.2rem);
+    line-height: 1.15;
+    white-space: nowrap;
+  }
 }
 
 .hero-sympo-desc {
