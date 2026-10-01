@@ -10,7 +10,7 @@ const CONFIG = {
   API_URL: '/api/register',
   MAX_ACTIVE_REGISTRATIONS: 30,
   HOST_COLLEGE_CODE: '8204',
-  SYMPOSIUM_DATE_ISO: '2026-10-10T09:00:00+05:30',
+  SYMPOSIUM_DATE_ISO: '2026-10-09T09:00:00+05:30',
   PPT_TOPICS: [
     "Bio - Concrete Revolution",
     "Digital twin Infrastructure - monitoring for Smart Civil Structures",
@@ -81,13 +81,13 @@ const EVENTS_DATA = {
     bgImage: 'assets/images/event_autocad.jpg',
     specs: [
       { lbl: 'PARTICIPATION', val: 'Individual (1)' },
-      { lbl: 'SOFTWARE', val: 'AutoCAD 2026' },
+      { lbl: 'SOFTWARE', val: 'AutoCAD' },
       { lbl: 'DURATION', val: '45 Minutes' },
       { lbl: 'TOPIC', val: 'Residential Building' }
     ],
     description: 'Precision architectural drafting, structural plan detailing, and elevation modeling under timed laboratory conditions.',
     rules: [
-      'Software Platform: AutoCAD 2026.',
+      'Software Platform: AutoCAD.',
       'Format: Individual Event. 45 Minutes duration.',
       'Topic: Normal Residential Building / Residential Building.',
       'Deliverables: Complete Plan and Elevation.',
